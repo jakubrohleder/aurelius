@@ -22,47 +22,97 @@ export default function parseMarkdown(markdown, components = {}) {
   }
 
   return {
-    node: React.createElement('div', {}, ...createReactChildren(ast)),
+    node: React.createElement('div', createReactProps(ast)),
     meta: meta.attributes,
   };
 
-  function createReactChildren(nodes) {
+  function createReactProps(nodes) {
     if (nodes == null) return [];
-    return nodes.map(createReactElement);
+    return nodes.reduce(
+      (acc, node) => {
+        const data = createReactElementData(node);
+        if (data == null) return acc;
+
+        const { propName } = data;
+        const element = createReactElement(data);
+
+        if (propName == null) {
+          return {
+            ...acc,
+            children: acc.children.concat([element]),
+          };
+        }
+
+        return {
+          ...acc,
+          [propName]: element,
+        };
+      },
+      { children: [] }
+    );
   }
 
-  function createReactElement(node) {
+  function createReactElement(elementData) {
+    const { type, props: rawProps, data } = elementData;
+
+    if (type === 'text') return data;
+    if (rawProps == null) return React.createElement(type);
+
+    const { children, ...props } = rawProps;
+
+    return React.createElement(type, props, ...children);
+  }
+
+  function createReactElementData(node) {
     if (node.type === 'text') {
-      const text = node.data.trim();
-      return text.length > 0 ? node.data : null;
+      if (node.data.trim().length === 0) return null;
+      return node;
     }
     if (node.type !== 'tag') {
-      console.warn('Type other then tag', node)
+      console.warn('Type other then tag', node);
       return null;
     }
     if (node.attribs == null) {
-      return React.createElement(node.name, {}, ...createReactChildren(node.children));
+      return {
+        type: node.name,
+        props: createReactProps(node.children),
+      };
     }
 
     const {
       'react-component-name': componentName,
+      'react-prop-name': propName,
       'class': className,
       style,
-      ...props
+      ...rest,
     } = node.attribs;
 
+    const props = { ...rest, className, ...createReactProps(node.children) };
+
     if (componentName == null) {
-      return React.createElement(node.name, { ...props, className }, ...createReactChildren(node.children));
+      return {
+        type: node.name,
+        propName,
+        props,
+      };
     }
 
     const Component = components[componentName];
 
     if (Component == null) {
       console.warn(`No react element ${componentName}`);
-      return React.createElement('div', {}, ...createReactChildren(node.children));
+      return {
+        type: 'div',
+        propName,
+        props,
+      };
     }
 
-    return React.createElement(Component, { ...props, className }, ...createReactChildren(node.children));
+    return {
+      type: Component,
+      propName,
+      props,
+    };
   }
 }
 
