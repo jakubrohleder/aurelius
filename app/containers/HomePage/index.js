@@ -12,29 +12,59 @@
 import React from 'react';
 import EditorInput from 'components/EditorInput';
 import EditorPreview from 'components/EditorPreview';
+import InsertButton from 'components/InsertButton';
 import * as Typography from 'components/Typography';
 import styles from './styles.css';
 import initialContent from 'raw!./index.md';
+import ComponentStore from 'hocs/ComponentStore';
 
-export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
-  state = {
-    content: initialContent,
-  };
+class HomePage extends React.Component {
+  static propTypes = {
+    updateState: React.PropTypes.func.isRequired,
+    content: React.PropTypes.string.isRequired,
+    fs: React.PropTypes.object.isRequired,
+  }
 
-  handleChange = (event) => {
-    this.setState({ content: event.target.value });
+  handleChangeText = (content) => {
+    this.props.updateState({
+      content,
+    });
+  }
+
+  handleChangeImage = ({ file, path }) => {
+    const { fs } = this.state;
+
+    this.props.updateState({
+      fs: {
+        ...fs,
+        [file.name]: {
+          file,
+          path,
+        },
+      },
+    });
   }
 
   render() {
-    const { content } = this.state;
+    const { content, fs } = this.props;
 
     return (
       <div className={styles.wrapper}>
+        <div className={styles.nav}>
+          <InsertButton handleChange={this.handleChangeImage} />
+        </div>
         <div className={styles.content}>
-          <EditorInput content={content} handleChange={this.handleChange} />
-          <EditorPreview content={content} components={Typography} />
+          <EditorInput content={content} handleChange={this.handleChangeText} />
+          <EditorPreview content={content} fs={fs} components={Typography} />
         </div>
       </div>
     );
   }
 }
+
+export default ComponentStore(
+  () => ({
+    content: initialContent,
+    fs: {},
+  })
+)(HomePage);

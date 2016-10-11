@@ -9,6 +9,8 @@ author: 'Anna Piotrowicz'
 path: "/10-najbardziej-modnych-bomberek/"
 ---
 
+![mobile](mobile.png)
+
 <div react-component-name="SimpleComponent"></div>
 
 This is some text between, lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, voluptatum?

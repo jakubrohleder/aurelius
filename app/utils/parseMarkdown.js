@@ -11,7 +11,7 @@ const md = markdownIt({
   highlight,
 });
 
-export default function parseMarkdown(markdown, components = {}) {
+export default function parseMarkdown(markdown, components = {}, fs = {}) {
   const meta = frontMatter(markdown);
   const html = md.render(meta.body);
   const ast = parseDOM(html);
@@ -87,7 +87,9 @@ export default function parseMarkdown(markdown, components = {}) {
       ...rest,
     } = node.attribs;
 
-    const props = { ...rest, className, ...createReactProps(node.children) };
+    const src = (fs[node.attribs.src] || {}).path || node.attribs.src;
+
+    const props = { ...rest, className, src, ...createReactProps(node.children) };
 
     if (componentName == null) {
       return {

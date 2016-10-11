@@ -1,13 +1,7 @@
 .wrapper {
-}
-
-.textarea {
-  resize: none;
-  width: 100%;
-  height: 100%;
   padding: 6em;
 }
 
-.textarea:focus {
-  outline: none;
+:global .CodeMirror {
+  height: 100% !important;
 }

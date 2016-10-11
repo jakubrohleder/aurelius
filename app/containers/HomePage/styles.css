@@ -11,9 +11,17 @@
 }
 
 .content > * {
-  flex: 1 1;
+  flex: 0 0 50%;
+  max-width: 50%;
 }
 
-pre {
-  background: #EEE;
+.content > *:first-child {
+  border-right: 1px solid black;
+}
+
+.nav {
+  padding: 1em;
+  display: flex;
+  justify-content: center;
+  background: #222;
 }

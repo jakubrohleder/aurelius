@@ -3,8 +3,8 @@ import parseMarkdown from 'utils/parseMarkdown';
 import styles from './styles.css';
 
 export default function EditorPreview(props) {
-  const { content, components } = props;
-  const { node, meta } = parseMarkdown(content, components);
+  const { content, components, fs } = props;
+  const { node, meta } = parseMarkdown(content, components, fs);
 
   return (
     <div className={styles.wrapper}>
@@ -17,5 +17,6 @@ export default function EditorPreview(props) {
 
 EditorPreview.propTypes = {
   content: React.PropTypes.string.isRequired,
+  fs: React.PropTypes.object.isRequired,
   components: React.PropTypes.object,
 };
