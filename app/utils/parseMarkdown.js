@@ -32,20 +32,37 @@ export default function parseMarkdown(markdown, components = {}) {
   }
 
   function createReactElement(node) {
-    if (node.type === 'text') return node.data;
-    if (node.type !== 'tag') return null;
-    if (node.attribs == null || node.attribs['react-component-name'] == null) {
-      return React.createElement(node.name, node.attribs, ...createReactChildren(node.children));
+    if (node.type === 'text') {
+      const text = node.data.trim();
+      return text.length > 0 ? node.data : null;
+    }
+    if (node.type !== 'tag') {
+      console.warn('Type other then tag', node)
+      return null;
+    }
+    if (node.attribs == null) {
+      return React.createElement(node.name, {}, ...createReactChildren(node.children));
     }
 
-    const { 'react-component-name': componentName, ...props } = node.attribs;
+    const {
+      'react-component-name': componentName,
+      'class': className,
+      style,
+      ...props
+    } = node.attribs;
+
+    if (componentName == null) {
+      return React.createElement(node.name, { ...props, className }, ...createReactChildren(node.children));
+    }
+
     const Component = components[componentName];
 
     if (Component == null) {
       console.warn(`No react element ${componentName}`);
       return React.createElement('div', {}, ...createReactChildren(node.children));
     }
-    return React.createElement(Component, props, ...createReactChildren(node.children));
+
+    return React.createElement(Component, { ...props, className }, ...createReactChildren(node.children));
   }
 }
 

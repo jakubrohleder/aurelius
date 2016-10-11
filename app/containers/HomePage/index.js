@@ -12,37 +12,9 @@
 import React from 'react';
 import EditorInput from 'components/EditorInput';
 import EditorPreview from 'components/EditorPreview';
+import * as Typography from 'components/Typography';
 import styles from './styles.css';
 import initialContent from 'raw!./index.md';
-
-function Frame(props) {
-  const { color, children } = props;
-
-  return (
-    <div style={{ border: `1px solid ${color}` }}>
-      {children}
-    </div>
-  );
-}
-
-Frame.propTypes = {
-  color: React.PropTypes.string,
-  children: React.PropTypes.node,
-};
-
-function Square(props) {
-  const { color } = props;
-
-  return (
-    <div style={{ width: '30vw', height: '30vw', background: color }} />
-  );
-}
-
-Square.propTypes = {
-  color: React.PropTypes.string,
-};
-
-const components = { Square, Frame };
 
 export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   state = {
@@ -60,7 +32,7 @@ export default class HomePage extends React.Component { // eslint-disable-line r
       <div className={styles.wrapper}>
         <div className={styles.content}>
           <EditorInput content={content} handleChange={this.handleChange} />
-          <EditorPreview content={content} components={components} />
+          <EditorPreview content={content} components={Typography} />
         </div>
       </div>
     );
