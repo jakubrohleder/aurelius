@@ -10,21 +10,10 @@
  */
 
 import React from 'react';
-// import { FormattedMessage } from 'react-intl';
-// import messages from './messages';
-
-import file from 'raw!./file.md';
-import fileLong from 'raw!./file-long.md';
-import parseMarkdown from 'utils/parseMarkdown';
-
-console.time('Short file');
-const Node = parseMarkdown(file, { Frame });
-console.timeEnd('Short file');
-
-console.time('Long file');
-const NodeLong = parseMarkdown(fileLong, { Frame });
-console.timeEnd('Long file');
-
+import EditorInput from 'components/EditorInput';
+import EditorPreview from 'components/EditorPreview';
+import styles from './styles.css';
+import initialContent from 'raw!./index.md';
 
 function Frame(props) {
   const { color, children } = props;
@@ -41,14 +30,39 @@ Frame.propTypes = {
   children: React.PropTypes.node,
 };
 
+function Square(props) {
+  const { color } = props;
+
+  return (
+    <div style={{ width: '30vw', height: '30vw', background: color }} />
+  );
+}
+
+Square.propTypes = {
+  color: React.PropTypes.string,
+};
+
+const components = { Square, Frame };
+
 export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  state = {
+    content: initialContent,
+  };
+
+  handleChange = (event) => {
+    this.setState({ content: event.target.value });
+  }
 
   render() {
+    const { content } = this.state;
+
     return (
-      <h1>
-        {Node}
-        {NodeLong}
-      </h1>
+      <div className={styles.wrapper}>
+        <div className={styles.content}>
+          <EditorInput content={content} handleChange={this.handleChange} />
+          <EditorPreview content={content} components={components} />
+        </div>
+      </div>
     );
   }
 }

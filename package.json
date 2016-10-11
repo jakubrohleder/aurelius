@@ -211,6 +211,8 @@
     "cross-env": "2.0.1",
     "express": "4.14.0",
     "fontfaceobserver": "2.0.4",
+    "front-matter": "^2.1.0",
+    "highlight.js": "^9.7.0",
     "htmlparser2": "^3.9.1",
     "immutable": "3.8.1",
     "inherits": "github:isaacs/inherits#e05d0fb",
