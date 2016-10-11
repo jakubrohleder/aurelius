@@ -17,6 +17,7 @@ import * as Typography from 'components/Typography';
 import styles from './styles.css';
 import initialContent from 'raw!./index.md';
 import ComponentStore from 'hocs/ComponentStore';
+import packToZip from 'utils/packToZip';
 
 class HomePage extends React.Component {
   static propTypes = {
@@ -32,7 +33,7 @@ class HomePage extends React.Component {
   }
 
   handleChangeImage = ({ file, path }) => {
-    const { fs } = this.state;
+    const { fs } = this.props;
 
     this.props.updateState({
       fs: {
@@ -45,6 +46,12 @@ class HomePage extends React.Component {
     });
   }
 
+  handleDownload = () => {
+    const { content, fs } = this.props;
+
+    packToZip(content, fs);
+  }
+
   render() {
     const { content, fs } = this.props;
 
@@ -52,6 +59,7 @@ class HomePage extends React.Component {
       <div className={styles.wrapper}>
         <div className={styles.nav}>
           <InsertButton handleChange={this.handleChangeImage} />
+          <button onClick={this.handleDownload}>Download</button>
         </div>
         <div className={styles.content}>
           <EditorInput content={content} handleChange={this.handleChangeText} />
