@@ -1,3 +1,8 @@
 .wrapper {
-  padding: 6em;
+  padding: 2em;
+  position: relative;
+}
+
+.wrapper img {
+  max-width: 100%;
 }

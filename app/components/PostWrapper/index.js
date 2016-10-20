@@ -12,13 +12,12 @@ export default function PostWrapper(props) {
   const { node, meta, fs } = props;
 
   const cover = fs[meta.cover] ? fs[meta.cover].path : meta.cover;
+  const photo = fs[meta.photo] ? fs[meta.photo].path : meta.photo;
 
   return (
     <div className={styles.wrapper}>
-      <p>{JSON.stringify(meta)}</p>
-
-      <img src={cover} alt="cover" />
-
+      <img src={cover} role="presentation" />
+      <img src={photo} role="presentation" />
       {node}
     </div>
   );

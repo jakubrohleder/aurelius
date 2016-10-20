@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageInput from 'components/ImageInput';
+import ImageButton from 'components/ImageButton';
 
 export default function MetaInputDateTime(props) {
   const { meta, name, onChange, onChangeImage } = props;
@@ -10,9 +10,7 @@ export default function MetaInputDateTime(props) {
   }
 
   return (
-    <div>
-      <ImageInput onChange={handleChange} value={meta[name]} />
-    </div>
+    <ImageButton onChange={handleChange} value={meta[name]} />
   );
 }
 

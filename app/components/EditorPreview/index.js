@@ -9,8 +9,6 @@ export default function EditorPreview(props) {
   if (wrapper == null) {
     return (
       <div className={styles.wrapper}>
-        <p>{JSON.stringify(meta)}</p>
-        <hr />
         {node}
       </div>
     );

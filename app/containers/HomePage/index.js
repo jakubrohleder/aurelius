@@ -13,16 +13,17 @@ import React from 'react';
 import PostWrapper from 'components/PostWrapper';
 import EditorInput from 'components/EditorInput';
 import EditorPreview from 'components/EditorPreview';
-import ImageInput from 'components/ImageInput';
 import * as Typography from 'components/Typography';
-import styles from './styles.css';
-import initialContent from 'raw!./index.md';
 import ComponentStore from 'hocs/ComponentStore';
 import packToZip from 'utils/packToZip';
-import Button from 'components/Button';
 import MetaInputText from 'components/MetaInputs/Text';
 import MetaInputDateTime from 'components/MetaInputs/DateTime';
 import MetaInputImage from 'components/MetaInputs/Image';
+
+import styles from './styles.css';
+import Footer from './components/Footer';
+import initialContent from 'raw!./md/components.md';
+// import initialContent from 'raw!./md/markdown.md';
 
 const metaInputs = [
   {
@@ -62,16 +63,20 @@ class HomePage extends React.Component {
     fs: React.PropTypes.object.isRequired,
   }
 
+  state = {
+    showFs: true,
+  }
+
   handleChangeText = (content) => {
     this.props.updateState({
       content,
     });
   }
 
-  handleChangeImage = ({ file, path }) => {
-    const { fs } = this.props;
+  handleAddImage = ({ file, path }) => {
+    const { fs, updateState } = this.props;
 
-    this.props.updateState({
+    updateState({
       fs: {
         ...fs,
         [file.name]: {
@@ -79,6 +84,25 @@ class HomePage extends React.Component {
           path,
         },
       },
+    });
+  }
+
+  handleRemoveImage = (name) => {
+    const { fs, updateState } = this.props;
+    const { [name]: oldFile, ...newFs } = fs; // eslint-disable-line no-unused-vars
+
+    updateState({
+      fs: newFs,
+    });
+  }
+
+  handleEditImage = (name, { file, path }) => {
+    const { fs, updateState } = this.props;
+    const { [name]: oldFile, ...newFs } = fs; // eslint-disable-line no-unused-vars
+    newFs[file.name] = { file, path };
+
+    updateState({
+      fs: newFs,
     });
   }
 
@@ -93,21 +117,23 @@ class HomePage extends React.Component {
 
     return (
       <div className={styles.wrapper}>
-        <div className={styles.nav}>
-          <Button>
-            <ImageInput onChange={this.handleChangeImage} />
-          </Button>
-          <Button onClick={this.handleDownload}>Download</Button>
-        </div>
         <div className={styles.content}>
           <EditorInput
             content={content}
             onChange={this.handleChangeText}
-            onChangeImage={this.handleChangeImage}
+            onChangeImage={this.handleAddImage}
             metaInputs={metaInputs}
           />
           <EditorPreview content={content} fs={fs} components={Typography} wrapper={PostWrapper} />
         </div>
+
+        <Footer
+          fs={fs}
+          handleAddImage={this.handleAddImage}
+          handleRemoveImage={this.handleRemoveImage}
+          handleEditImage={this.handleEditImage}
+          handleDownload={this.handleDownload}
+        />
       </div>
     );
   }
@@ -116,6 +142,25 @@ class HomePage extends React.Component {
 export default ComponentStore(
   () => ({
     content: initialContent,
-    fs: {},
+    fs: {
+      t1: {
+        path: 'http://placehold.it/350x150',
+      },
+      t2: {
+        path: 'http://placehold.it/350x150',
+      },
+      t3: {
+        path: 'http://placehold.it/350x150',
+      },
+      t4: {
+        path: 'http://placehold.it/350x150',
+      },
+      t5: {
+        path: 'http://placehold.it/350x150',
+      },
+      t6: {
+        path: 'http://placehold.it/350x150',
+      },
+    },
   })
 )(HomePage);

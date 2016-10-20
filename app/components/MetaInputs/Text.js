@@ -4,7 +4,7 @@ export default function MetaInputText(props) {
   const { name, onChange, meta } = props;
 
   return (
-    <input type="text" onChange={(event) => onChange(name, event.target.value)} value={meta[name]} />
+    <input type="text" onChange={(event) => onChange(name, event.target.value)} value={meta[name] || ''} />
   );
 }
 

@@ -1,6 +1,8 @@
-.wrapper { /* stylelint-disable */
-  padding: 1em;
-  background: #444;
-  color: #EEE;
-  border: 1px solid #555;
+.wrapper {
+  padding: 2em;
+  position: relative;
+}
+
+.wrapper img {
+  max-width: 100%;
 }
