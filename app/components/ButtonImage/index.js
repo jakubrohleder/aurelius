@@ -1,6 +1,6 @@
 /**
 *
-* ImageButton
+* ButtonImage
 *
 */
 
@@ -8,7 +8,7 @@ import React from 'react';
 
 import styles from './styles.css';
 
-export default class ImageButton extends React.Component {
+export default class ButtonImage extends React.Component {
   componentWillMount() {
     this.name = Math.random().toString();
   }
@@ -50,7 +50,7 @@ export default class ImageButton extends React.Component {
   }
 }
 
-ImageButton.propTypes = {
+ButtonImage.propTypes = {
   onChange: React.PropTypes.func.isRequired,
   value: React.PropTypes.string,
 };

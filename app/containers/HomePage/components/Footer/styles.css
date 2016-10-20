@@ -6,3 +6,26 @@
   width: 100%;
   background: #222;
 }
+
+.footerButtons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.footerButtonsLeft {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.footerButtonsRight {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.browser {
+  border-top: 1px solid white;
+}

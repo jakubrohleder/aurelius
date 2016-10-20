@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Button from 'components/Button';
-import ImageButton from 'components/ImageButton';
+import ButtonImage from 'components/ButtonImage';
 import FSBrowser from 'components/FSBrowser';
 
 import styles from './styles.css';
@@ -29,18 +29,20 @@ export default class Footer extends React.Component {
         <div className={styles.footerButtons}>
           <div className={styles.footerButtonsLeft}>
             <Button onClick={this.handleToggleFs}>{showFs ? 'Hide' : 'Show'} FS</Button>
-            <ImageButton onChange={handleAddImage} />
+            <ButtonImage onChange={handleAddImage} />
           </div>
           <div className={styles.footerButtonsRight}>
             <Button onClick={handleDownload}>Download</Button>
           </div>
         </div>
         {showFs &&
-          <FSBrowser
-            fs={fs}
-            onRemove={handleRemoveImage}
-            onEdit={handleEditImage}
-          />
+          <div className={styles.browser}>
+            <FSBrowser
+              fs={fs}
+              onRemove={handleRemoveImage}
+              onEdit={handleEditImage}
+            />
+          </div>
         }
       </div>
     );
