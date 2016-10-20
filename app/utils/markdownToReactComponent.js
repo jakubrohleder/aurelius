@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import React from 'react';
 import frontMatter from 'front-matter';
 import hljs from 'highlight.js';
@@ -11,8 +13,15 @@ const md = markdownIt({
   highlight,
 });
 
-export default function parseMarkdown(markdown, components = {}, fs = {}) {
-  const meta = frontMatter(markdown);
+/**
+ * Transforms markdownText and returns React Component
+ * @param  {string} markdownText [description]
+ * @param  {Object} components   Object containing React Components that will be used to replace divs
+ * @param  {Object} fs           Object containing 'file system' tree, that will be used to replace images
+ * @return {ReactComponent}
+ */
+export default function markdownToReactComponent(markdownText, components = {}, fs = {}) {
+  const meta = frontMatter(markdownText);
   const html = md.render(meta.body);
   const ast = parseDOM(html);
 
@@ -82,9 +91,8 @@ export default function parseMarkdown(markdown, components = {}, fs = {}) {
     const {
       'react-component-name': componentName,
       'react-prop-name': propName,
-      'class': className,
-      style,
-      ...rest,
+      class: className,
+      ...rest
     } = node.attribs;
 
     const src = (fs[node.attribs.src] || {}).path || node.attribs.src;

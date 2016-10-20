@@ -1,5 +1,13 @@
-.wrapper {
-  padding: 6em;
+.textarea {
+  padding: 3em 6em;
+}
+
+.meta {
+  padding: 1em 6em;
+}
+
+.meta input {
+  border: 1px solid black;
 }
 
 :global .CodeMirror {

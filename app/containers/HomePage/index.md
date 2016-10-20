@@ -1,10 +1,10 @@
 ---
 title: Skąd się wzięła Bomber Jacket?
-date: "2016-09-26T12:40:32.169Z"
+date: "2016-10-20T10:29"
 layout: post
 cover: 'cover.jpg'
 readNext: "/kendall-janner/"
-thumb: 'readnext.jpg'
+photo: 'photo.jpg'
 author: 'Anna Piotrowicz'
 path: "/10-najbardziej-modnych-bomberek/"
 ---

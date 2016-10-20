@@ -1,18 +1,13 @@
 /**
 *
-* ImageButton
+* ImageInput
 *
 */
 
 import React from 'react';
 
-// import { FormattedMessage } from 'react-intl';
-// import messages from './messages';
-
-import styles from './styles.css';
-
-export default function ImageButton(props) {
-  const { handleChange } = props;
+export default function ImageInput(props) {
+  const { onChange, value } = props;
 
   function handleImageChange(event) {
     event.preventDefault();
@@ -21,7 +16,7 @@ export default function ImageButton(props) {
     const file = event.target.files[0];
 
     reader.onloadend = () => {
-      handleChange({
+      onChange({
         file,
         path: reader.result,
       });
@@ -31,12 +26,14 @@ export default function ImageButton(props) {
   }
 
   return (
-    <button className={styles.wrapper}>
+    <div>
+      <p>{value}</p>
       <input className="fileInput" type="file" onChange={handleImageChange} />
-    </button>
+    </div>
   );
 }
 
-ImageButton.propTypes = {
-  handleChange: React.PropTypes.func.isRequired,
+ImageInput.propTypes = {
+  onChange: React.PropTypes.func.isRequired,
+  value: React.PropTypes.string,
 };
