@@ -20,13 +20,13 @@ export default class ImageWrapper extends React.Component {
   }
 
   render() {
-    const { path, onEdit, onRemove } = this.props;
+    const { src, onEdit, onRemove } = this.props;
     const { value } = this.state;
 
     return (
       <div className={styles.photoWrapper}>
         <input value={value} onChange={this.handleChange} onBlur={() => onEdit(value)} />
-        <img src={path} role="presentation" />
+        <img src={src} role="presentation" />
         <Button onClick={onRemove}>Remove</Button>
       </div>
     );
@@ -35,7 +35,7 @@ export default class ImageWrapper extends React.Component {
 
 ImageWrapper.propTypes = {
   name: React.PropTypes.string.isRequired,
-  path: React.PropTypes.string.isRequired,
+  src: React.PropTypes.string.isRequired,
   onEdit: React.PropTypes.func.isRequired,
   onRemove: React.PropTypes.func.isRequired,
 };

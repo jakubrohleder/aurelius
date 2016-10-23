@@ -16,10 +16,7 @@ export default function ButtonImage(props) {
       const file = files[i];
       const reader = new FileReader();
       reader.onloadend = () => {
-        onChange({
-          file,
-          path: reader.result,
-        });
+        onChange(file.name, reader.result);
       };
 
       reader.readAsDataURL(file);

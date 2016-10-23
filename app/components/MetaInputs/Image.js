@@ -1,12 +1,12 @@
 import React from 'react';
 import ButtonImage from 'components/ButtonImage';
 
-export default function MetaInputDateTime(props) {
+export default function MetaInputImage(props) {
   const { meta, name, onChange, onChangeImage } = props;
 
-  function handleChange({ file, path }) {
-    onChange(name, file.name);
-    onChangeImage({ file, path });
+  function handleChange(fileName, src) {
+    onChange(name, fileName);
+    onChangeImage(fileName, src);
   }
 
   return (
@@ -14,7 +14,7 @@ export default function MetaInputDateTime(props) {
   );
 }
 
-MetaInputDateTime.propTypes = {
+MetaInputImage.propTypes = {
   name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func.isRequired,
   onChangeImage: React.PropTypes.func.isRequired,

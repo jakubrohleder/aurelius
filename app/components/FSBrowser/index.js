@@ -12,20 +12,18 @@ import styles from './styles.css';
 export default function FSBrowser(props) {
   const { fs, onEdit, onRemove } = props;
 
-  const handleChange = (name) => (newName) => {
-    const { file, path } = fs[name];
-
-    onEdit(name, { file: { ...file, name: newName }, path });
+  const handleChange = (oldName) => (newName) => {
+    onEdit(oldName, newName);
   };
 
   return (
     <div className={styles.wrapper}>
       {Object.entries(fs).map(
-        ([name, { path }]) => (
+        ([name, src]) => (
           <ImageWrapper
             key={name}
             name={name}
-            path={path}
+            src={src}
             onEdit={handleChange(name)}
             onRemove={() => onRemove(name)}
           />

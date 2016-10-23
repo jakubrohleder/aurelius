@@ -19,13 +19,12 @@ export default function packToZip(markdown, fs) {
   const title = meta.attributes.title;
   const date = meta.attributes.date || localISOTime;
   const name = `${date.slice(0, 10)}-${kebabCase(title)}`;
-  const dir = zip.folder(name);
   const content = `---\n${objectToFrontMatter({ ...meta.attributes, date })}\n---\n${meta.body}`;
 
-  dir.file('index.md', content);
+  zip.file('index.md', content);
 
   Object.entries(fs).forEach(([key, value]) => {
-    dir.file(key, value.path.split(',')[1], { base64: true });
+    zip.file(key, value.split(',')[1], { base64: true });
   });
 
   zip.generateAsync({ type: 'blob' })

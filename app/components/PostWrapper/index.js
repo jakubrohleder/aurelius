@@ -11,8 +11,8 @@ import styles from './styles.css';
 export default function PostWrapper(props) {
   const { node, meta, fs } = props;
 
-  const cover = fs[meta.cover] ? fs[meta.cover].path : meta.cover;
-  const photo = fs[meta.photo] ? fs[meta.photo].path : meta.photo;
+  const cover = fs[meta.cover] || meta.cover;
+  const photo = fs[meta.photo] || meta.photo;
 
   return (
     <div className={styles.wrapper}>

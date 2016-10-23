@@ -75,17 +75,14 @@ class HomePage extends React.Component {
     });
   }
 
-  handleAddImage = ({ file, path }, dir) => {
+  handleAddImage = (name, src, dir) => {
     const { fs, updateState } = this.props;
-    const name = dir ? `${dir}/${file.name}` : file.name;
+    const path = dir ? `${dir}/${name}` : name;
 
     updateState({
       fs: {
         ...fs,
-        [name]: {
-          file,
-          path,
-        },
+        [path]: src,
       },
     });
   }
@@ -99,10 +96,10 @@ class HomePage extends React.Component {
     });
   }
 
-  handleEditImage = (name, { file, path }) => {
+  handleEditImage = (oldName, newName) => {
     const { fs, updateState } = this.props;
-    const { [name]: oldFile, ...newFs } = fs; // eslint-disable-line no-unused-vars
-    newFs[file.name] = { file, path };
+    const { [oldName]: src, ...newFs } = fs;
+    newFs[newName] = src;
 
     updateState({
       fs: newFs,
@@ -116,6 +113,7 @@ class HomePage extends React.Component {
   }
 
   handleUploadZip = (zip) => {
+    console.log(zip);
     Object.values(zip.files).forEach((file) => {
       if (file.dir) return;
       if (file.name.startsWith('__MACOSX')) return;
@@ -126,7 +124,7 @@ class HomePage extends React.Component {
       if (file.name.endsWith('.jpg')) {
         file.async('uint8array').then((buffer) => {
           const path = URL.createObjectURL(new Blob([buffer], { type: 'image/jpg' }));
-          this.handleAddImage({ file, path });
+          this.handleAddImage(file.name, path);
         });
       }
     });
