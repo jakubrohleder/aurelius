@@ -62,7 +62,8 @@ export default class EditorInput extends React.Component {
     const { content } = this.props;
 
     const meta = frontMatter(content);
-    const result = `---\n${meta.frontmatter}\n---\n${newContent}`;
+    const frontmatter = meta.frontmatter || '';
+    const result = `---\n${frontmatter}\n---\n${newContent}`;
 
     return result;
   }

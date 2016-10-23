@@ -13,6 +13,8 @@ import React from 'react';
 import PostWrapper from 'components/PostWrapper';
 import EditorInput from 'components/EditorInput';
 import EditorPreview from 'components/EditorPreview';
+import Button from 'components/Button';
+import ButtonZip from 'components/ButtonZip';
 import * as Typography from 'components/Typography';
 import ComponentStore from 'hocs/ComponentStore';
 import packToZip from 'utils/packToZip';
@@ -22,7 +24,7 @@ import MetaInputImage from 'components/MetaInputs/Image';
 
 import styles from './styles.css';
 import Footer from './components/Footer';
-import initialContent from 'raw!./md/components.md';
+// import initialContent from 'raw!./md/components.md';
 // import initialContent from 'raw!./md/markdown.md';
 
 const metaInputs = [
@@ -59,7 +61,7 @@ const metaInputs = [
 class HomePage extends React.Component {
   static propTypes = {
     updateState: React.PropTypes.func.isRequired,
-    content: React.PropTypes.string.isRequired,
+    content: React.PropTypes.string,
     fs: React.PropTypes.object.isRequired,
   }
 
@@ -73,13 +75,14 @@ class HomePage extends React.Component {
     });
   }
 
-  handleAddImage = ({ file, path }) => {
+  handleAddImage = ({ file, path }, dir) => {
     const { fs, updateState } = this.props;
+    const name = dir ? `${dir}/${file.name}` : file.name;
 
     updateState({
       fs: {
         ...fs,
-        [file.name]: {
+        [name]: {
           file,
           path,
         },
@@ -112,8 +115,34 @@ class HomePage extends React.Component {
     packToZip(content, fs);
   }
 
+  handleUploadZip = (zip) => {
+    Object.values(zip.files).forEach((file) => {
+      if (file.dir) return;
+      if (file.name.startsWith('__MACOSX')) return;
+      if (file.name.endsWith('.md')) {
+        file.async('string').then(this.handleChangeText);
+      }
+
+      if (file.name.endsWith('.jpg')) {
+        file.async('uint8array').then((buffer) => {
+          const path = URL.createObjectURL(new Blob([buffer], { type: 'image/jpg' }));
+          this.handleAddImage({ file, path });
+        });
+      }
+    });
+  }
+
   render() {
     const { content, fs } = this.props;
+
+    if (content == null) {
+      return (
+        <div>
+          <Button onClick={() => this.handleChangeText('')}>New</Button>
+          <ButtonZip onChange={this.handleUploadZip} />
+        </div>
+      );
+    }
 
     return (
       <div className={styles.wrapper}>
@@ -141,26 +170,8 @@ class HomePage extends React.Component {
 
 export default ComponentStore(
   () => ({
-    content: initialContent,
+    // content: initialContent,
     fs: {
-      t1: {
-        path: 'http://placehold.it/350x150',
-      },
-      t2: {
-        path: 'http://placehold.it/350x150',
-      },
-      t3: {
-        path: 'http://placehold.it/350x150',
-      },
-      t4: {
-        path: 'http://placehold.it/350x150',
-      },
-      t5: {
-        path: 'http://placehold.it/350x150',
-      },
-      t6: {
-        path: 'http://placehold.it/350x150',
-      },
     },
   })
 )(HomePage);

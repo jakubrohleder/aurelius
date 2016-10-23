@@ -29,7 +29,7 @@ export default class Footer extends React.Component {
         <div className={styles.footerButtons}>
           <div className={styles.footerButtonsLeft}>
             <Button onClick={this.handleToggleFs}>{showFs ? 'Hide' : 'Show'} FS</Button>
-            <ButtonImage onChange={handleAddImage} />
+            <ButtonImage onChange={(file) => handleAddImage(file, 'img')} />
           </div>
           <div className={styles.footerButtonsRight}>
             <Button onClick={handleDownload}>Download</Button>
