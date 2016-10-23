@@ -21,11 +21,14 @@ import packToZip from 'utils/packToZip';
 import MetaInputText from 'components/MetaInputs/Text';
 import MetaInputDateTime from 'components/MetaInputs/DateTime';
 import MetaInputImage from 'components/MetaInputs/Image';
+import classNames from 'classnames/bind';
 
 import styles from './styles.css';
 import Footer from './components/Footer';
 // import initialContent from 'raw!./md/components.md';
 // import initialContent from 'raw!./md/markdown.md';
+
+const cx = classNames.bind(styles);
 
 const metaInputs = [
   {
@@ -67,6 +70,7 @@ class HomePage extends React.Component {
 
   state = {
     showFs: true,
+    focus: 0,
   }
 
   handleChangeText = (content) => {
@@ -113,7 +117,6 @@ class HomePage extends React.Component {
   }
 
   handleUploadZip = (zip) => {
-    console.log(zip);
     Object.values(zip.files).forEach((file) => {
       if (file.dir) return;
       if (file.name.startsWith('__MACOSX')) return;
@@ -130,8 +133,16 @@ class HomePage extends React.Component {
     });
   }
 
+  handleFocus = (direction) => () => {
+    const { focus } = this.state;
+
+    if (focus === direction) this.setState({ focus: undefined });
+    else this.setState({ focus: direction });
+  }
+
   render() {
     const { content, fs } = this.props;
+    const { focus } = this.state;
 
     if (content == null) {
       return (
@@ -142,16 +153,24 @@ class HomePage extends React.Component {
       );
     }
 
+    const contentClass = cx('content', focus);
+
     return (
       <div className={styles.wrapper}>
-        <div className={styles.content}>
-          <EditorInput
-            content={content}
-            onChange={this.handleChangeText}
-            onChangeImage={this.handleAddImage}
-            metaInputs={metaInputs}
-          />
-          <EditorPreview content={content} fs={fs} components={Typography} wrapper={PostWrapper} />
+        <div className={contentClass}>
+          <div className={styles.contentElement}>
+            <Button onClick={this.handleFocus('left')}>Focus</Button>
+            <EditorInput
+              content={content}
+              onChange={this.handleChangeText}
+              onChangeImage={this.handleAddImage}
+              metaInputs={metaInputs}
+            />
+          </div>
+          <div className={styles.contentElement}>
+            <Button onClick={this.handleFocus('right')}>Focus</Button>
+            <EditorPreview content={content} fs={fs} components={Typography} wrapper={PostWrapper} />
+          </div>
         </div>
 
         <Footer

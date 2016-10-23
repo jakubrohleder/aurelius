@@ -8,11 +8,34 @@
   flex: 1;
   position: relative;
   display: flex;
+  overflow: hidden;
 }
 
-.content > * {
+.contentElement {
   flex: 0 0 50%;
   max-width: 50%;
+  background: white;
+  transition: all 0.5s ease-in-out;
+}
+
+.content.left > .contentElement {
+  flex: 0 0 0%;
+  max-width: 0%;
+}
+
+.content.left > .contentElement:first-child {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.content.right > .contentElement {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.content.right > .contentElement:first-child {
+  flex: 0 0 0%;
+  max-width: 0%;
 }
 
 .content > *:first-child {
