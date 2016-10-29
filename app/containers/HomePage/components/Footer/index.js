@@ -5,8 +5,6 @@ import ButtonImage from 'components/ButtonImage';
 import FSBrowser from 'components/FSBrowser';
 import classNames from 'classnames/bind';
 
-import countWords from 'utils/countWords';
-
 import styles from './styles.css';
 
 const cx = classNames.bind(styles);
@@ -23,13 +21,12 @@ export default class Footer extends React.Component {
 
   render() {
     const {
-      fs, content,
+      fs, wordCount,
       handleAddImage, handleDownload, handleRemoveImage, handleEditImage,
     } = this.props;
     const { showFs } = this.state;
     const filesCount = Object.keys(fs).length;
     const footerClass = cx('footer', { showFs });
-    const wordCount = countWords(content);
 
     return (
       <div className={footerClass}>
@@ -62,7 +59,7 @@ export default class Footer extends React.Component {
 
 Footer.propTypes = {
   fs: React.PropTypes.object.isRequired,
-  content: React.PropTypes.string.isRequired,
+  wordCount: React.PropTypes.number.isRequired,
   handleAddImage: React.PropTypes.func.isRequired,
   handleDownload: React.PropTypes.func.isRequired,
   handleRemoveImage: React.PropTypes.func.isRequired,

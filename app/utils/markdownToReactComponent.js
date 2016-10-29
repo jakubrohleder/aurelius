@@ -1,17 +1,18 @@
 /* eslint-disable no-console */
 
 import React from 'react';
-import frontMatter from 'front-matter';
-import hljs from 'highlight.js';
+// import hljs from 'highlight.js';
 import markdownIt from 'markdown-it';
 import { parseDOM } from 'htmlparser2';
 import camelCase from 'lodash/camelCase';
+
+import countWords from 'utils/countWords';
 
 const md = markdownIt({
   html: true,
   linkify: true,
   typographer: true,
-  highlight,
+  // highlight,
 });
 
 /**
@@ -22,8 +23,12 @@ const md = markdownIt({
  * @return {ReactComponent}
  */
 export default function markdownToReactComponent(markdownText, components = {}, fs = {}) {
-  const meta = frontMatter(markdownText);
-  const html = md.render(meta.body);
+  const html = md.render(markdownText);
+
+  // return (
+  //   <div dangerouslySetInnerHTML={{ __html: html }} />
+  // );
+
   const ast = parseDOM(html);
 
   if (ast == null) {
@@ -33,7 +38,7 @@ export default function markdownToReactComponent(markdownText, components = {}, 
 
   return {
     node: React.createElement('div', createReactProps(ast)),
-    meta: meta.attributes,
+    wordCount: countWords(ast),
   };
 
   function createReactProps(nodes) {
@@ -137,18 +142,18 @@ export default function markdownToReactComponent(markdownText, components = {}, 
   }
 }
 
-function highlight(str, lang) {
-  if ((lang !== null) && hljs.getLanguage(lang)) {
-    try {
-      return hljs.highlight(lang, str).value;
-    } catch (_error) {
-      console.error(_error);
-    }
-  }
-  try {
-    return hljs.highlightAuto(str).value;
-  } catch (_error) {
-    console.error(_error);
-  }
-  return '';
-}
+// function highlight(str, lang) {
+//   if ((lang !== null) && hljs.getLanguage(lang)) {
+//     try {
+//       return hljs.highlight(lang, str).value;
+//     } catch (_error) {
+//       console.error(_error);
+//     }
+//   }
+//   try {
+//     return hljs.highlightAuto(str).value;
+//   } catch (_error) {
+//     console.error(_error);
+//   }
+//   return '';
+// }

@@ -1,15 +1,5 @@
 /* eslint-disable no-console */
 
-import frontMatter from 'front-matter';
-import markdownIt from 'markdown-it';
-import { parseDOM } from 'htmlparser2';
-
-const md = markdownIt({
-  html: true,
-  linkify: true,
-  typographer: true,
-});
-
 function countWordsInText(text) {
   return text
     .split(' ')
@@ -25,10 +15,6 @@ function countWordsInNode(ast) {
   return ast.children.reduce((sum, node) => sum + countWordsInNode(node), 0);
 }
 
-export default function countWords(markdownText) {
-  const meta = frontMatter(markdownText);
-  const html = md.render(meta.body);
-  const ast = parseDOM(html);
-
+export default function countWords(ast) {
   return countWordsInNode({ children: ast });
 }

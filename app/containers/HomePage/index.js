@@ -22,6 +22,7 @@ import MetaInputText from 'components/MetaInputs/Text';
 import MetaInputDateTime from 'components/MetaInputs/DateTime';
 import MetaInputImage from 'components/MetaInputs/Image';
 import classNames from 'classnames/bind';
+import markdownToReactComponent from 'utils/markdownToReactComponent';
 
 import styles from './styles.css';
 import Footer from './components/Footer';
@@ -45,6 +46,7 @@ class HomePage extends React.Component {
   static propTypes = {
     updateState: React.PropTypes.func.isRequired,
     content: React.PropTypes.string,
+    meta: React.PropTypes.object.isRequired,
     fs: React.PropTypes.object.isRequired,
   }
 
@@ -53,9 +55,19 @@ class HomePage extends React.Component {
     focus: 'center',
   }
 
-  handleChangeText = (content) => {
+  handleChangeContent = (content) => {
     this.props.updateState({
       content,
+    });
+  }
+
+  handleChangeMeta = (name, value) => {
+    const { meta } = this.props;
+    this.props.updateState({
+      meta: {
+        ...meta,
+        [name]: value,
+      },
     });
   }
 
@@ -101,7 +113,7 @@ class HomePage extends React.Component {
       if (file.dir) return;
       if (file.name.startsWith('__MACOSX')) return;
       if (file.name.endsWith('.md')) {
-        file.async('string').then(this.handleChangeText);
+        file.async('string').then(this.handleChangeContent);
       }
 
       if (file.name.endsWith('.jpg')) {
@@ -121,19 +133,21 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { content, fs } = this.props;
+    const { content, meta, fs } = this.props;
     const { focus } = this.state;
 
     if (content == null) {
       return (
         <div>
-          <Button onClick={() => this.handleChangeText('')}>New</Button>
+          <Button onClick={() => this.handleChangeContent('')}>New</Button>
           <ButtonZip onChange={this.handleUploadZip} />
         </div>
       );
     }
 
     const contentClass = cx('content', focus);
+    const components = Typography;
+    const { node, wordCount } = markdownToReactComponent(content, components, fs);
 
     return (
       <div className={styles.wrapper}>
@@ -146,19 +160,28 @@ class HomePage extends React.Component {
           <div className={styles.contentElement}>
             <EditorInput
               content={content}
-              onChange={this.handleChangeText}
+              meta={meta}
+              onChangeContent={this.handleChangeContent}
+              onChangeMeta={this.handleChangeMeta}
               onChangeImage={this.handleAddImage}
               metaInputs={metaInputs}
             />
           </div>
           <div className={styles.contentElement}>
-            <EditorPreview content={content} fs={fs} components={Typography} wrapper={PostWrapper} />
+            {
+              <EditorPreview
+                node={node}
+                meta={meta}
+                fs={fs}
+                wrapper={PostWrapper}
+              />
+            }
           </div>
         </div>
 
         <Footer
           fs={fs}
-          content={content}
+          wordCount={wordCount}
           handleAddImage={this.handleAddImage}
           handleRemoveImage={this.handleRemoveImage}
           handleEditImage={this.handleEditImage}
@@ -172,6 +195,8 @@ class HomePage extends React.Component {
 export default ComponentStore(
   () => ({
     content: initialContent,
+    meta: {
+    },
     fs: {
     },
   })

@@ -19,15 +19,15 @@ export default function Header(props) {
 
   return (
     <div className={headerClass}>
-      <a href="" onClick={handleFocus('left')} >
+      <button className={styles.button} onClick={handleFocus('left')} >
         <img className={styles.icon} src={left} role="presentation" />
-      </a>
-      <a href="" onClick={handleFocus('center')} >
+      </button>
+      <button className={styles.button} href="" onClick={handleFocus('center')} >
         <img className={styles.icon} src={center} role="presentation" />
-      </a>
-      <a href="" onClick={handleFocus('right')} >
+      </button>
+      <button className={styles.button} href="" onClick={handleFocus('right')} >
         <img className={styles.icon} src={right} role="presentation" />
-      </a>
+      </button>
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './styles.css';
 import Codemirror from 'codemirror';
-import frontMatter from 'front-matter';
-import objectToFrontMatter from 'utils/objectToFrontMatter';
 // import Button from 'components/Button';
 
 import 'codemirror/mode/markdown/markdown';
@@ -11,12 +9,8 @@ import 'codemirror/theme/monokai.css';
 
 
 export default class EditorInput extends React.Component {
-  state = {
-    raw: false,
-  }
-
   componentDidMount() {
-    const { onChange } = this.props;
+    const { onChangeContent } = this.props;
 
     const options = {
       ...this.props.options,
@@ -27,101 +21,40 @@ export default class EditorInput extends React.Component {
       tabSize: '2',
     };
 
-    const formatDoc = (doc) => {
-      const { raw } = this.state;
-      if (this.stateChange) {
-        this.stateChange = false;
-        return !raw ? doc : this.addMeta(doc);
-      }
-      return raw ? doc : this.addMeta(doc);
-    };
-
     this.codeMirror = Codemirror.fromTextArea(this.textarea, options);
-    this.codeMirror.on('change', (doc) => onChange(formatDoc(doc.getValue())));
+    this.codeMirror.on('change', (doc) => onChangeContent(doc.getValue()));
 
-    setInterval(() => {
+    setTimeout(() => {
       this.codeMirror.refresh();
     });
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (this.state.raw !== nextState.raw) {
-      const value = nextState.raw ? nextProps.content : frontMatter(nextProps.content).body;
-      this.stateChange = true;
-      this.codeMirror.getDoc().setValue(value);
-    }
-  }
-
-  onMetaChange = (key, value) => {
-    const { onChange } = this.props;
-
-    onChange(this.addContent(key, value));
-  }
-
-  addMeta = (newContent) => {
-    const { content } = this.props;
-
-    const meta = frontMatter(content);
-    const frontmatter = meta.frontmatter || '';
-    const result = `---\n${frontmatter}\n---\n${newContent}`;
-
-    return result;
-  }
-
-  addContent = (key, value) => {
-    const { content } = this.props;
-
-    const meta = frontMatter(content);
-    const newFrontMatter = {
-      ...meta.attributes,
-      [key]: value,
-    };
-
-    const result = `---\n${objectToFrontMatter(newFrontMatter)}\n---\n${meta.body}`;
-
-    return result;
-  }
-
-  toggleRaw = () => {
-    const { raw } = this.state;
-    this.setState({
-      raw: !raw,
-    });
-  }
-
   render() {
-    const { content, metaInputs, onChangeImage } = this.props;
-    const { raw } = this.state;
-
-    const meta = frontMatter(content);
-
-    const text = raw ? content : meta.body;
+    const { content, meta, metaInputs, onChangeImage, onChangeMeta } = this.props;
 
     return (
       <div className={styles.wrapper}>
         {
           // <Button onClick={this.toggleRaw}>Raw</Button>
         }
-        {!raw &&
-          <div className={styles.meta}>
-            {metaInputs.map(
-              (Component, index) =>
-                <div
-                  key={index}
-                  className={styles.metaInput}
-                >
-                  <Component
-                    meta={meta.attributes}
-                    onChange={this.onMetaChange}
-                    onChangeImage={onChangeImage}
-                  />
-                </div>
-            )}
-          </div>
-        }
+        <div className={styles.meta}>
+          {metaInputs.map(
+            (Component, index) =>
+              <div
+                key={index}
+                className={styles.metaInput}
+              >
+                <Component
+                  meta={meta}
+                  onChange={onChangeMeta}
+                  onChangeImage={onChangeImage}
+                />
+              </div>
+          )}
+        </div>
         <div className={styles.textarea}>
           <textarea
-            defaultValue={text}
+            defaultValue={content}
             ref={(textarea) => { this.textarea = textarea; }}
           />
         </div>
@@ -132,7 +65,9 @@ export default class EditorInput extends React.Component {
 
 EditorInput.propTypes = {
   content: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func.isRequired,
+  meta: React.PropTypes.object.isRequired,
+  onChangeContent: React.PropTypes.func.isRequired,
+  onChangeMeta: React.PropTypes.func.isRequired,
   onChangeImage: React.PropTypes.func.isRequired,
   options: React.PropTypes.object.isRequired,
   metaInputs: React.PropTypes.array.isRequired,

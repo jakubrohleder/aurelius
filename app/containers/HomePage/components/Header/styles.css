@@ -6,18 +6,21 @@
 .icon {
   height: 2em;
   margin: 1em;
+}
+
+.button {
   opacity: 0.4;
   transition: opacity 0.5s ease-in-out;
 }
 
-.header.left > .icon:first-child {
+.header.left > .button:first-child {
   opacity: 0.8;
 }
 
-.header.right > .icon:last-child {
+.header.right > .button:last-child {
   opacity: 0.8;
 }
 
-.header.center > .icon:nth-child(2) {
+.header.center > .button:nth-child(2) {
   opacity: 0.8;
 }

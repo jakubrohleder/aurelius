@@ -1,10 +1,8 @@
 import React from 'react';
-import markdownToReactComponent from 'utils/markdownToReactComponent';
 import styles from './styles.css';
 
 export default function EditorPreview(props) {
-  const { content, components, fs, wrapper } = props;
-  const { node, meta } = markdownToReactComponent(content, components, fs);
+  const { wrapper, node, meta, fs } = props;
 
   if (wrapper == null) {
     return (
@@ -18,7 +16,7 @@ export default function EditorPreview(props) {
 
 EditorPreview.propTypes = {
   wrapper: React.PropTypes.func,
-  content: React.PropTypes.string.isRequired,
+  meta: React.PropTypes.object.isRequired,
+  node: React.PropTypes.node.isRequired,
   fs: React.PropTypes.object.isRequired,
-  components: React.PropTypes.object,
 };

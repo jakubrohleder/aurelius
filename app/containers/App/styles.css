@@ -13,3 +13,7 @@
 html {
   font-family: 'Alegreya Sans', sans-serif;
 }
+
+button {
+  outline: none;
+}
