@@ -5,6 +5,7 @@ import frontMatter from 'front-matter';
 import hljs from 'highlight.js';
 import markdownIt from 'markdown-it';
 import { parseDOM } from 'htmlparser2';
+import camelCase from 'lodash/camelCase';
 
 const md = markdownIt({
   html: true,
@@ -92,12 +93,22 @@ export default function markdownToReactComponent(markdownText, components = {}, 
       'react-component-name': componentName,
       'react-prop-name': propName,
       class: className,
+      style: styleString,
       ...rest
     } = node.attribs;
 
+    const style = (styleString || '').split(';').reduce(
+      (acc, element) => {
+        const [name, value] = element.split(':');
+        const reactName = camelCase(name);
+
+        return { ...acc, [reactName]: value };
+      }, {}
+    );
+
     const src = fs[node.attribs.src] || node.attribs.src;
 
-    const props = { ...rest, className, src, ...createReactProps(node.children) };
+    const props = { ...rest, className, style, src, ...createReactProps(node.children) };
 
     if (componentName == null) {
       return {

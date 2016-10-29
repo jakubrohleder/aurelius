@@ -25,40 +25,20 @@ import classNames from 'classnames/bind';
 
 import styles from './styles.css';
 import Footer from './components/Footer';
+import Header from './components/Header';
 // import initialContent from 'raw!./md/components.md';
-// import initialContent from 'raw!./md/markdown.md';
+import initialContent from 'raw!./md/markdown.md';
 
 const cx = classNames.bind(styles);
 
 const metaInputs = [
-  {
-    Component: (props) => <MetaInputText {...props} name="title" />,
-    name: 'Title',
-  },
-  {
-    Component: (props) => <MetaInputText {...props} name="author" />,
-    name: 'Author',
-  },
-  {
-    Component: (props) => <MetaInputDateTime {...props} name="date" />,
-    name: 'Date',
-  },
-  {
-    Component: (props) => <MetaInputImage {...props} name="cover" />,
-    name: 'Cover',
-  },
-  {
-    Component: (props) => <MetaInputImage {...props} name="photo" />,
-    name: 'Photo',
-  },
-  {
-    Component: (props) => <MetaInputText {...props} name="path" />,
-    name: 'Path',
-  },
-  {
-    Component: (props) => <MetaInputText {...props} name="readNext" />,
-    name: 'Read next',
-  },
+  (props) => <MetaInputText {...props} name="title" />,
+  (props) => <MetaInputText {...props} name="author" />,
+  (props) => <MetaInputDateTime {...props} name="date" />,
+  (props) => <MetaInputImage {...props} name="cover" />,
+  (props) => <MetaInputImage {...props} name="photo" />,
+  (props) => <MetaInputText {...props} name="path" />,
+  (props) => <MetaInputText {...props} name="readNext" />,
 ];
 
 class HomePage extends React.Component {
@@ -70,7 +50,7 @@ class HomePage extends React.Component {
 
   state = {
     showFs: true,
-    focus: 0,
+    focus: 'center',
   }
 
   handleChangeText = (content) => {
@@ -136,7 +116,7 @@ class HomePage extends React.Component {
   handleFocus = (direction) => () => {
     const { focus } = this.state;
 
-    if (focus === direction) this.setState({ focus: undefined });
+    if (focus === direction) this.setState({ focus: 'center' });
     else this.setState({ focus: direction });
   }
 
@@ -157,9 +137,13 @@ class HomePage extends React.Component {
 
     return (
       <div className={styles.wrapper}>
+        <Header
+          focus={focus}
+          handleFocus={this.handleFocus}
+        />
+
         <div className={contentClass}>
           <div className={styles.contentElement}>
-            <Button onClick={this.handleFocus('left')}>Focus</Button>
             <EditorInput
               content={content}
               onChange={this.handleChangeText}
@@ -168,13 +152,13 @@ class HomePage extends React.Component {
             />
           </div>
           <div className={styles.contentElement}>
-            <Button onClick={this.handleFocus('right')}>Focus</Button>
             <EditorPreview content={content} fs={fs} components={Typography} wrapper={PostWrapper} />
           </div>
         </div>
 
         <Footer
           fs={fs}
+          content={content}
           handleAddImage={this.handleAddImage}
           handleRemoveImage={this.handleRemoveImage}
           handleEditImage={this.handleEditImage}
@@ -187,7 +171,7 @@ class HomePage extends React.Component {
 
 export default ComponentStore(
   () => ({
-    // content: initialContent,
+    content: initialContent,
     fs: {
     },
   })

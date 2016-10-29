@@ -16,6 +16,8 @@ export default function FSBrowser(props) {
     onEdit(oldName, newName);
   };
 
+  if (Object.values(fs).length === 0) return null;
+
   return (
     <div className={styles.wrapper}>
       {Object.entries(fs).map(

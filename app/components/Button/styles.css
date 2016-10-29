@@ -1,11 +1,14 @@
-button {
+.wrapper {
   outline: none;
+  display: block;
+  padding: 0.3em 0.6em;
+  color: #333;
+  border: 2px solid #999;
+  border-radius: 0.3em;
+  text-transform: uppercase;
+  font-size: 0.8em;
 }
 
-.wrapper {
-  display: block;
-  padding: 1em;
-  background: #444;
-  color: #EEE;
-  border: 1px solid #555;
+.wrapper:disabled {
+  opacity: 0.7;
 }

@@ -24,10 +24,14 @@ export default class ImageWrapper extends React.Component {
     const { value } = this.state;
 
     return (
-      <div className={styles.photoWrapper}>
-        <input value={value} onChange={this.handleChange} onBlur={() => onEdit(value)} />
-        <img src={src} role="presentation" />
-        <Button onClick={onRemove}>Remove</Button>
+      <div className={styles.wrapper}>
+        <div className={styles.header}>
+          <input value={value} onChange={this.handleChange} onBlur={() => onEdit(value)} />
+          <div className={styles.headerButtons}>
+            <Button onClick={onRemove}>✕</Button>
+          </div>
+        </div>
+        <img className={styles.image} src={src} role="presentation" />
       </div>
     );
   }

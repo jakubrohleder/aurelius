@@ -1,31 +1,43 @@
 .footer {
-  color: white;
   z-index: 10;
   position: fixed;
-  bottom: 0;
+  top: calc(100% - 45px);
   width: 100%;
-  background: #222;
+  background: white;
+  border-top: 2px solid #444;
+  transition: transform 0.5s ease-in-out;
+}
+
+.showFs {
+  transform: translateY(-174px);
 }
 
 .footerButtons {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  padding: 0.5em;
 }
 
 .footerButtonsLeft {
   display: flex;
+  align-items: center;
   flex-direction: row;
   flex: 1;
 }
 
+.footerButtonsLeft > * {
+  margin-right: 1em;
+}
+
 .footerButtonsRight {
   display: flex;
+  align-items: center;
   flex-direction: row;
   justify-content: flex-end;
   flex: 1;
 }
 
-.browser {
-  border-top: 1px solid white;
+.footerButtonsCenter > span {
+  margin-right: 1em;
 }

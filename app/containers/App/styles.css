@@ -4,6 +4,12 @@
  * App container styles
  */
 
+@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans&subset=latin-ext');
+
 .container {
   display: block;
+}
+
+html {
+  font-family: 'Alegreya Sans', sans-serif;
 }

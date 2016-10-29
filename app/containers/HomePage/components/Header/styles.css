@@ -1,0 +1,23 @@
+.header {
+  display: flex;
+  justify-content: center;
+}
+
+.icon {
+  height: 2em;
+  margin: 1em;
+  opacity: 0.4;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.header.left > .icon:first-child {
+  opacity: 0.8;
+}
+
+.header.right > .icon:last-child {
+  opacity: 0.8;
+}
+
+.header.center > .icon:nth-child(2) {
+  opacity: 0.8;
+}

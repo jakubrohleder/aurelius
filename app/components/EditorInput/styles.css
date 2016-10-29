@@ -1,15 +1,20 @@
 .textarea {
-  padding: 2em;
-}
-
-.meta {
-  padding: 2em;
-}
-
-.meta input {
-  border: 1px solid black;
+  padding: 2em 2em 4em;
 }
 
 :global .CodeMirror {
   height: 100% !important;
+}
+
+.metaInput {
+  border-top: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+}
+
+.metaInput:first-of-type {
+  border-top: none;
+}
+
+.metaInput:last-of-type {
+  border-bottom: 2px solid #CCC;
 }

@@ -3,7 +3,7 @@ import styles from './styles.css';
 import Codemirror from 'codemirror';
 import frontMatter from 'front-matter';
 import objectToFrontMatter from 'utils/objectToFrontMatter';
-import Button from 'components/Button';
+// import Button from 'components/Button';
 
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/lib/codemirror.css';
@@ -99,13 +99,17 @@ export default class EditorInput extends React.Component {
 
     return (
       <div className={styles.wrapper}>
-        <Button onClick={this.toggleRaw}>Raw</Button>
+        {
+          // <Button onClick={this.toggleRaw}>Raw</Button>
+        }
         {!raw &&
           <div className={styles.meta}>
             {metaInputs.map(
-              ({ Component, name }, index) =>
-                <div key={index}>
-                  <p>{name}</p>
+              (Component, index) =>
+                <div
+                  key={index}
+                  className={styles.metaInput}
+                >
                   <Component
                     meta={meta.attributes}
                     onChange={this.onMetaChange}

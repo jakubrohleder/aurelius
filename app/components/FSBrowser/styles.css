@@ -3,13 +3,5 @@
   overflow-x: scroll;
   flex-direction: row;
   flex-wrap: nowrap;
-}
-
-.photoWrapper {
-  padding: 1em;
-  border-right: 1px solid white;
-}
-
-.photoWrapper > img {
-  max-height: 7em;
+  border-top: 2px solid #CCC;
 }

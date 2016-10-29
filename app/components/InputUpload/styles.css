@@ -1,0 +1,12 @@
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.svg {
+  margin-right: 0.4em;
+  margin-top: -0.2em;
+  height: 1em;
+}

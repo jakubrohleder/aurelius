@@ -1,0 +1,30 @@
+.wrapper {
+  display: block;
+  width: 100%;
+  padding: 0.5em 1em;
+}
+
+.name {
+  display: block;
+  text-transform: uppercase;
+  color: #777;
+  font-size: 0.8em;
+  margin-bottom: 0.5em;
+}
+
+.input {
+  width: 100%;
+  border: none;
+  outline: none;
+  opacity: 0;
+  height: 0;
+  position: absolute;
+}
+
+.value {
+  display: block;
+  min-height: 1.5em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

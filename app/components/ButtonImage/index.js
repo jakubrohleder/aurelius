@@ -5,13 +5,13 @@
 */
 
 import React from 'react';
-import ButtonUpload from 'components/ButtonUpload';
+import Button from 'components/Button';
+import InputUpload from 'components/InputUpload';
 
 export default function ButtonImage(props) {
   const { onChange } = props;
 
   function handleImageChange(files) {
-    console.log(files);
     for (let i = 0; i < files.length; i += 1) {
       const file = files[i];
       const reader = new FileReader();
@@ -24,7 +24,9 @@ export default function ButtonImage(props) {
   }
 
   return (
-    <ButtonUpload {...props} onChange={handleImageChange} />
+    <Button>
+      <InputUpload {...props} onChange={handleImageChange} />
+    </Button>
   );
 }
 

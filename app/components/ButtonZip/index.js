@@ -5,7 +5,8 @@
 */
 
 import React from 'react';
-import ButtonUpload from 'components/ButtonUpload';
+import InputUpload from 'components/InputUpload';
+import Button from 'components/Button';
 import JSZip from 'jszip';
 
 export default function ButtonZip(props) {
@@ -25,7 +26,9 @@ export default function ButtonZip(props) {
   }
 
   return (
-    <ButtonUpload {...props} onChange={handleImageChange} />
+    <Button>
+      <InputUpload {...props} onChange={handleImageChange} />
+    </Button>
   );
 }
 
