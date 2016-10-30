@@ -13,39 +13,121 @@
 }
 
 .contentElement {
-  flex: 0 0 50%;
-  max-width: 50%;
+  flex: 0 0 100%;
+  max-width: 100%;
   background: white;
-  transition:
-    transform 0.5s ease-in-out,
-    max-width 0.5s ease-in-out,
-    flex 0.5s ease-in-out;
+  transition: transform 0.5s ease-in-out;
+  position: relative;
 }
 
-.content.left > .contentElement:first-child {
-  flex: 0 0 100%;
-  max-width: 100%;
+.content.initial > .contentElement > .contentWrapper {
+  width: 50%;
 }
 
-.content.left > .contentElement:last-child {
-  margin-left: 0;
-}
-
-.content.right > .contentElement:last-child {
-  flex: 0 0 100%;
-  max-width: 100%;
-  animation: hideBoarderAnimation 0s ease-in 0.5s forwards;
-  transform: translateX(-50%);
-}
-
-.contentElement:last-child {
+.contentElementRight {
   border-left: 2px solid #444;
   z-index: 2;
   margin-left: -1px;
+  transform: translateX(-50%);
 }
 
-@keyframes hideBoarderAnimation {
+/* Right */
+
+.content.right > .contentElementRight {
+  transform: translateX(calc(-100% - 1px));
+}
+
+.content.right > .contentElementRight > .contentWrapper {
+  animation:
+    fadeR 1s linear,
+    resizeR 0s 0.25s forwards;
+}
+
+/* Left */
+
+.content.left > .contentElementRight {
+  transform: translateX(1px);
+}
+
+.content.left > .contentElementLeft > .contentWrapper {
+  animation:
+    fadeL 1s linear,
+    resizeL 0s 0.25s forwards;
+}
+
+/* Center */
+
+.content.center.fromleft > .contentElementLeft > .contentWrapper,
+.content.center.fromright > .contentElementRight > .contentWrapper {
+  animation:
+    fade 1s linear,
+    resize 0s 0.25s both;
+}
+
+.content.center.fromleft > .contentElementRight > .contentWrapper,
+.content.center.fromright > .contentElementLeft > .contentWrapper {
+  width: 50%;
+}
+
+.content.frominitial .contentWrapper,
+.content.fromcenter .contentWrapper {
+  width: 50%;
+}
+
+@keyframes fadeL {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeR {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes resize {
   to {
-    border: none;
+    width: 50%;
+  }
+
+  from {
+    width: 100%;
+  }
+}
+
+@keyframes resizeL {
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes resizeR {
+  to {
+    width: 100%;
   }
 }

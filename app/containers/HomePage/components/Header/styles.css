@@ -21,6 +21,7 @@
   opacity: 0.8;
 }
 
+.header.initial > .button:nth-child(2),
 .header.center > .button:nth-child(2) {
   opacity: 0.8;
 }

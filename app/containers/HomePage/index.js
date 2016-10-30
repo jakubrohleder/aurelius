@@ -52,7 +52,8 @@ class HomePage extends React.Component {
 
   state = {
     showFs: true,
-    focus: 'center',
+    focus: 'initial',
+    previousFocus: 'initial',
   }
 
   handleChangeContent = (content) => {
@@ -127,14 +128,15 @@ class HomePage extends React.Component {
 
   handleFocus = (direction) => () => {
     const { focus } = this.state;
+    if (focus === 'initial' && direction === 'center') return;
 
-    if (focus === direction) this.setState({ focus: 'center' });
-    else this.setState({ focus: direction });
+    if (focus === direction) this.setState({ focus: 'center', previousFocus: focus });
+    else this.setState({ focus: direction, previousFocus: focus });
   }
 
   render() {
     const { content, meta, fs } = this.props;
-    const { focus } = this.state;
+    const { focus, previousFocus } = this.state;
 
     if (content == null) {
       return (
@@ -145,7 +147,7 @@ class HomePage extends React.Component {
       );
     }
 
-    const contentClass = cx('content', focus);
+    const contentClass = cx('content', focus, styles[`from${previousFocus}`]);
     const components = Typography;
     const { node, wordCount } = markdownToReactComponent(content, components, fs);
 
@@ -157,25 +159,27 @@ class HomePage extends React.Component {
         />
 
         <div className={contentClass}>
-          <div className={styles.contentElement}>
-            <EditorInput
-              content={content}
-              meta={meta}
-              onChangeContent={this.handleChangeContent}
-              onChangeMeta={this.handleChangeMeta}
-              onChangeImage={this.handleAddImage}
-              metaInputs={metaInputs}
-            />
+          <div className={cx('contentElement', 'contentElementLeft')}>
+            <div className={styles.contentWrapper}>
+              <EditorInput
+                content={content}
+                meta={meta}
+                onChangeContent={this.handleChangeContent}
+                onChangeMeta={this.handleChangeMeta}
+                onChangeImage={this.handleAddImage}
+                metaInputs={metaInputs}
+              />
+            </div>
           </div>
-          <div className={styles.contentElement}>
-            {
+          <div className={cx('contentElement', 'contentElementRight')}>
+            <div className={styles.contentWrapper}>
               <EditorPreview
                 node={node}
                 meta={meta}
                 fs={fs}
                 wrapper={PostWrapper}
               />
-            }
+            </div>
           </div>
         </div>
 
