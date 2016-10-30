@@ -46,7 +46,9 @@
     "test:firefox": "npm run test -- --browsers Firefox",
     "test:safari": "npm run test -- --browsers Safari",
     "test:ie": "npm run test -- --browsers IE",
-    "coveralls": "cat ./coverage/lcov/lcov.info | coveralls"
+    "coveralls": "cat ./coverage/lcov/lcov.info | coveralls",
+    "upload": "gh-pages -d build",
+    "deploy": "npm run build && npm run upload"
   },
   "lint-staged": {
     "*.js": "lint:eslint",
@@ -279,6 +281,7 @@
     "exports-loader": "0.6.3",
     "extract-text-webpack-plugin": "2.0.0-beta.4",
     "file-loader": "0.9.0",
+    "gh-pages": "^0.11.0",
     "html-loader": "0.4.4",
     "html-webpack-plugin": "2.22.0",
     "image-webpack-loader": "3.0.0",
