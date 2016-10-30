@@ -9,6 +9,14 @@ import 'codemirror/theme/monokai.css';
 
 
 export default class EditorInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      content: props.content,
+    };
+  }
+
+
   componentDidMount() {
     const { onChangeContent } = this.props;
 
@@ -22,11 +30,21 @@ export default class EditorInput extends React.Component {
     };
 
     this.codeMirror = Codemirror.fromTextArea(this.textarea, options);
-    this.codeMirror.on('change', (doc) => onChangeContent(doc.getValue()));
+    this.codeMirror.on('change', (doc) => {
+      const content = doc.getValue();
+      this.setState({ content }, () => onChangeContent(content));
+    });
 
     setTimeout(() => {
       this.codeMirror.refresh();
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.codeMirror && nextProps.content !== this.state.content) {
+      this.codeMirror.setValue(nextProps.content);
+      setTimeout(() => this.codeMirror.focus());
+    }
   }
 
   render() {

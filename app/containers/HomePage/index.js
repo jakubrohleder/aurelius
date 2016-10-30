@@ -22,6 +22,7 @@ import MetaInputText from 'components/MetaInputs/Text';
 import MetaInputDateTime from 'components/MetaInputs/DateTime';
 import MetaInputImage from 'components/MetaInputs/Image';
 import classNames from 'classnames/bind';
+import frontMatter from 'front-matter';
 import markdownToReactComponent from 'utils/markdownToReactComponent';
 
 import styles from './styles.css';
@@ -52,6 +53,7 @@ class HomePage extends React.Component {
 
   state = {
     showFs: true,
+    showMenu: true,
     focus: 'initial',
     previousFocus: 'initial',
   }
@@ -64,6 +66,7 @@ class HomePage extends React.Component {
 
   handleChangeMeta = (name, value) => {
     const { meta } = this.props;
+
     this.props.updateState({
       meta: {
         ...meta,
@@ -104,17 +107,36 @@ class HomePage extends React.Component {
   }
 
   handleDownload = () => {
-    const { content, fs } = this.props;
+    const { content, meta, fs } = this.props;
 
-    packToZip(content, fs);
+    packToZip(content, meta, fs);
+  }
+
+  handleHideModal = () => {
+    this.setState({
+      showMenu: false,
+    });
   }
 
   handleUploadZip = (zip) => {
+    const { updateState } = this.props;
+
     Object.values(zip.files).forEach((file) => {
       if (file.dir) return;
       if (file.name.startsWith('__MACOSX')) return;
       if (file.name.endsWith('.md')) {
-        file.async('string').then(this.handleChangeContent);
+        file.async('string').then((content) => {
+          const meta = frontMatter(content);
+
+          updateState({
+            content: meta.body,
+            meta: meta.attributes,
+          });
+
+          this.setState({
+            showMenu: false,
+          });
+        });
       }
 
       if (file.name.endsWith('.jpg')) {
@@ -134,18 +156,17 @@ class HomePage extends React.Component {
     else this.setState({ focus: direction, previousFocus: focus });
   }
 
+  handleStartNew = () => {
+    this.handleHideModal();
+    this.props.updateState({
+      meta: {},
+      content: '',
+    });
+  }
+
   render() {
     const { content, meta, fs } = this.props;
-    const { focus, previousFocus } = this.state;
-
-    if (content == null) {
-      return (
-        <div>
-          <Button onClick={() => this.handleChangeContent('')}>New</Button>
-          <ButtonZip onChange={this.handleUploadZip} />
-        </div>
-      );
-    }
+    const { focus, previousFocus, showMenu } = this.state;
 
     const contentClass = cx('content', focus, styles[`from${previousFocus}`]);
     const components = Typography;
@@ -153,6 +174,14 @@ class HomePage extends React.Component {
 
     return (
       <div className={styles.wrapper}>
+        {showMenu &&
+          <div className={styles.modal}>
+            <Button onClick={this.handleStartNew}>New Document</Button>
+            <Button onClick={this.handleHideModal}>Continue</Button>
+            <ButtonZip onChange={this.handleUploadZip}>From zip</ButtonZip>
+          </div>
+        }
+
         <Header
           focus={focus}
           handleFocus={this.handleFocus}
@@ -186,10 +215,12 @@ class HomePage extends React.Component {
         <Footer
           fs={fs}
           wordCount={wordCount}
-          handleAddImage={this.handleAddImage}
-          handleRemoveImage={this.handleRemoveImage}
-          handleEditImage={this.handleEditImage}
-          handleDownload={this.handleDownload}
+          onStartNew={this.handleStartNew}
+          onAddImage={this.handleAddImage}
+          onRemoveImage={this.handleRemoveImage}
+          onEditImage={this.handleEditImage}
+          onDownload={this.handleDownload}
+          onUploadZip={this.handleUploadZip}
         />
       </div>
     );
@@ -200,6 +231,7 @@ export default ComponentStore(
   () => ({
     content: initialContent,
     meta: {
+      title: 'test',
     },
     fs: {
     },

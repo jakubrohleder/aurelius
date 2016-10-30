@@ -10,7 +10,7 @@ import Button from 'components/Button';
 import JSZip from 'jszip';
 
 export default function ButtonZip(props) {
-  const { onChange } = props;
+  const { onChange, children } = props;
 
   function handleImageChange(files) {
     event.preventDefault();
@@ -27,11 +27,22 @@ export default function ButtonZip(props) {
 
   return (
     <Button>
-      <InputUpload {...props} onChange={handleImageChange} />
+      <InputUpload
+        {...props}
+        accept=".zip, application/zip, application/octet-stream"
+        onChange={handleImageChange}
+      >
+        {children}
+      </InputUpload>
     </Button>
   );
 }
 
 ButtonZip.propTypes = {
   onChange: React.PropTypes.func.isRequired,
+  children: React.PropTypes.node.isRequired,
+};
+
+ButtonZip.defaultProps = {
+  children: <div>Add zip</div>,
 };

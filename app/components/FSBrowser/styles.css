@@ -3,5 +3,15 @@
   overflow-x: scroll;
   flex-direction: row;
   flex-wrap: nowrap;
-  border-top: 2px solid #CCC;
+}
+
+.empty {
+  height: 11em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty > img {
+  height: 6em;
 }

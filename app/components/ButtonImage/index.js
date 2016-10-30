@@ -9,7 +9,7 @@ import Button from 'components/Button';
 import InputUpload from 'components/InputUpload';
 
 export default function ButtonImage(props) {
-  const { onChange } = props;
+  const { onChange, children } = props;
 
   function handleImageChange(files) {
     for (let i = 0; i < files.length; i += 1) {
@@ -25,11 +25,18 @@ export default function ButtonImage(props) {
 
   return (
     <Button>
-      <InputUpload {...props} onChange={handleImageChange} />
+      <InputUpload {...props} onChange={handleImageChange}>
+        {children}
+      </InputUpload>
     </Button>
   );
 }
 
 ButtonImage.propTypes = {
   onChange: React.PropTypes.func.isRequired,
+  children: React.PropTypes.node.isRequired,
+};
+
+ButtonImage.defaultProps = {
+  children: <div>Add images</div>,
 };

@@ -8,6 +8,7 @@ import React from 'react';
 
 import ImageWrapper from './ImageWrapper';
 import styles from './styles.css';
+import empty from './empty.svg';
 
 export default function FSBrowser(props) {
   const { fs, onEdit, onRemove } = props;
@@ -16,7 +17,13 @@ export default function FSBrowser(props) {
     onEdit(oldName, newName);
   };
 
-  if (Object.values(fs).length === 0) return null;
+  if (Object.values(fs).length === 0) {
+    return (
+      <div className={styles.empty}>
+        <img src={empty} role="presentation" />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrapper}>

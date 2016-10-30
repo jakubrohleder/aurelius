@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 function countWordsInText(text) {
   return text
     .split(' ')

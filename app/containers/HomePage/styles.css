@@ -4,6 +4,25 @@
   min-height: 100vh;
 }
 
+.modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 15;
+}
+
+.modal > * {
+  margin: 0.5em;
+  background: white;
+}
+
 .content {
   flex: 1;
   position: relative;
