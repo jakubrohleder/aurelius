@@ -9,12 +9,13 @@ const webpack = require('webpack');
 const cssnext = require('postcss-cssnext');
 const postcssFocus = require('postcss-focus');
 const postcssReporter = require('postcss-reporter');
+const publicPath = process.env.PUBLIC_PATH || '/';
 
 module.exports = (options) => ({
   entry: options.entry,
   output: Object.assign({ // Compile into js/build.js
     path: path.resolve(process.cwd(), 'build'),
-    publicPath: '/',
+    publicPath,
   }, options.output), // Merge with env dependent settings
   module: {
     loaders: [{

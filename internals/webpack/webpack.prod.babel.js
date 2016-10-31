@@ -5,6 +5,30 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OfflinePlugin = require('offline-plugin');
 
+const publicPath = process.env.PUBLIC_PATH || '/';
+
+const config = {
+  publicPath,
+};
+
+const htmlConfig = {
+  template: 'app/index.ejs',
+  config,
+  minify: {
+    removeComments: true,
+    collapseWhitespace: true,
+    removeRedundantAttributes: true,
+    useShortDoctype: true,
+    removeEmptyAttributes: true,
+    removeStyleLinkTypeAttributes: true,
+    keepClosingSlash: true,
+    minifyJS: true,
+    minifyCSS: true,
+    minifyURLs: true,
+  },
+  inject: true,
+};
+
 module.exports = require('./webpack.base.babel')({
   // In production, we skip all hot-reloading stuff
   entry: [
@@ -47,22 +71,11 @@ module.exports = require('./webpack.base.babel')({
     }),
 
     // Minify and optimize the index.html
-    new HtmlWebpackPlugin({
-      template: 'app/index.html',
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true,
-      },
-      inject: true,
-    }),
+    new HtmlWebpackPlugin(htmlConfig),
+
+    new HtmlWebpackPlugin(Object.assign({ filename: '200.html' }, htmlConfig)),
+
+    new HtmlWebpackPlugin(Object.assign({ filename: '404.html' }, htmlConfig)),
 
     // Extract the CSS into a separate file
     new ExtractTextPlugin('[name].[contenthash].css'),
@@ -71,7 +84,7 @@ module.exports = require('./webpack.base.babel')({
     // assets manipulations and do leak its manipulations to HtmlWebpackPlugin
     new OfflinePlugin({
       relativePaths: false,
-      publicPath: '/',
+      publicPath,
 
       // No need to cache .htaccess. See http://mxs.is/googmp,
       // this is applied before any match in `caches` section

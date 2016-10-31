@@ -6,21 +6,22 @@
  */
 import 'babel-polyfill';
 
-/* eslint-disable import/no-unresolved */
+/* eslint-disable import/no-unresolved, import/extensions */
 // Load the manifest.json file and the .htaccess file
 import '!file?name=[name].[ext]!./manifest.json';
 import 'file?name=[name].[ext]!./.htaccess';
-/* eslint-enable import/no-unresolved */
+/* eslint-enable import/no-unresolved, import/extensions */
 
 // Import all the third party stuff
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
+import { applyRouterMiddleware, Router, useRouterHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import LanguageProvider from 'containers/LanguageProvider';
 import configureStore from './store';
+import { createHistory } from 'history';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
@@ -29,9 +30,8 @@ import { translationMessages } from './i18n';
 import 'sanitize.css/sanitize.css';
 
 // Create redux store with history
-// this uses the singleton browserHistory provided by react-router
-// Optionally, this could be changed to leverage a created history
-// e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
+const basename = window.config.publicPath || '/';
+const browserHistory = useRouterHistory(createHistory)({ basename });
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
 

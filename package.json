@@ -48,7 +48,7 @@
     "test:ie": "npm run test -- --browsers IE",
     "coveralls": "cat ./coverage/lcov/lcov.info | coveralls",
     "upload": "gh-pages -d build",
-    "deploy": "npm run build && npm run upload"
+    "deploy": "PUBLIC_PATH=/aurelius/ npm run build && npm run upload"
   },
   "lint-staged": {
     "*.js": "lint:eslint",
