@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux-immutable';
 import editor, * as editorActions from './editor';
 import fs, * as fileSystemActions from './fileSystem';
 import ui, * as uiActions from './ui';

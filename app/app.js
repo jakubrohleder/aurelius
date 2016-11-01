@@ -22,6 +22,8 @@ import { useScroll } from 'react-router-scroll';
 import LanguageProvider from 'containers/LanguageProvider';
 import configureStore from './store';
 import { createHistory } from 'history';
+import { loadState, saveState } from 'utils/localStorage';
+import throttle from 'lodash/throttle';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
@@ -32,8 +34,19 @@ import 'sanitize.css/sanitize.css';
 // Create redux store with history
 const basename = window.config.publicPath || '/';
 const browserHistory = useRouterHistory(createHistory)({ basename });
-const initialState = {};
+const initialState = loadState();
 const store = configureStore(initialState, browserHistory);
+
+store.subscribe(throttle(() => {
+  const state = store.getState().toJS();
+  if (!state.homePage) return;
+  saveState({
+    homePage: {
+      fs: state.homePage.fs,
+      editor: state.homePage.editor,
+    },
+  });
+}), 1000);
 
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState

@@ -142,6 +142,10 @@ class HomePage extends React.Component {
 }
 
 export default connect(
-  (state) => state.get('homePage'),
+  (state) => ({
+    fs: state.getIn(['homePage', 'fs']),
+    editor: state.getIn(['homePage', 'editor']),
+    ui: state.getIn(['homePage', 'ui']),
+  }),
   actions,
 )(HomePage);
