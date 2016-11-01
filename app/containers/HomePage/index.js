@@ -16,20 +16,18 @@ import EditorPreview from 'components/EditorPreview';
 import Button from 'components/Button';
 import ButtonZip from 'components/ButtonZip';
 import * as Typography from 'components/Typography';
-import ComponentStore from 'hocs/ComponentStore';
+import { connect } from 'react-redux';
 import packToZip from 'utils/packToZip';
 import MetaInputText from 'components/MetaInputs/Text';
 import MetaInputDateTime from 'components/MetaInputs/DateTime';
 import MetaInputImage from 'components/MetaInputs/Image';
 import classNames from 'classnames/bind';
-import frontMatter from 'front-matter';
 import markdownToReactComponent from 'utils/markdownToReactComponent';
+import { actions } from './redux';
 
 import styles from './styles.css';
 import Footer from './components/Footer';
 import Header from './components/Header';
-// import initialContent from 'raw!./md/components.md';
-import initialContent from 'raw!./md/markdown.md';
 
 const cx = classNames.bind(styles);
 
@@ -45,157 +43,73 @@ const metaInputs = [
 
 class HomePage extends React.Component {
   static propTypes = {
-    updateState: React.PropTypes.func.isRequired,
-    content: React.PropTypes.string,
-    meta: React.PropTypes.object.isRequired,
+    ui: React.PropTypes.object.isRequired,
+    editor: React.PropTypes.object.isRequired,
     fs: React.PropTypes.object.isRequired,
-  }
-
-  state = {
-    showFs: true,
-    showMenu: true,
-    focus: 'initial',
-    previousFocus: 'initial',
-  }
-
-  handleChangeContent = (content) => {
-    this.props.updateState({
-      content,
-    });
-  }
-
-  handleChangeMeta = (name, value) => {
-    const { meta } = this.props;
-
-    this.props.updateState({
-      meta: {
-        ...meta,
-        [name]: value,
-      },
-    });
-  }
-
-  handleAddImage = (name, src, dir) => {
-    const { fs, updateState } = this.props;
-    const path = dir ? `${dir}/${name}` : name;
-
-    updateState({
-      fs: {
-        ...fs,
-        [path]: src,
-      },
-    });
-  }
-
-  handleRemoveImage = (name) => {
-    const { fs, updateState } = this.props;
-    const { [name]: oldFile, ...newFs } = fs; // eslint-disable-line no-unused-vars
-
-    updateState({
-      fs: newFs,
-    });
-  }
-
-  handleEditImage = (oldName, newName) => {
-    const { fs, updateState } = this.props;
-    const { [oldName]: src, ...newFs } = fs;
-    newFs[newName] = src;
-
-    updateState({
-      fs: newFs,
-    });
+    loadDocumentFromZip: React.PropTypes.func.isRequired,
+    setContent: React.PropTypes.func.isRequired,
+    setMetaKey: React.PropTypes.func.isRequired,
+    hideMenu: React.PropTypes.func.isRequired,
+    resetDocument: React.PropTypes.func.isRequired,
+    changeFocus: React.PropTypes.func.isRequired,
+    addFile: React.PropTypes.func.isRequired,
+    removeFile: React.PropTypes.func.isRequired,
+    moveFile: React.PropTypes.func.isRequired,
   }
 
   handleDownload = () => {
-    const { content, meta, fs } = this.props;
+    const { editor, fs } = this.props;
 
-    packToZip(content, meta, fs);
-  }
-
-  handleHideModal = () => {
-    this.setState({
-      showMenu: false,
-    });
-  }
-
-  handleUploadZip = (zip) => {
-    const { updateState } = this.props;
-
-    Object.values(zip.files).forEach((file) => {
-      if (file.dir) return;
-      if (file.name.startsWith('__MACOSX')) return;
-      if (file.name.endsWith('.md')) {
-        file.async('string').then((content) => {
-          const meta = frontMatter(content);
-
-          updateState({
-            content: meta.body,
-            meta: meta.attributes,
-          });
-
-          this.setState({
-            showMenu: false,
-          });
-        });
-      }
-
-      if (file.name.endsWith('.jpg')) {
-        file.async('uint8array').then((buffer) => {
-          const path = URL.createObjectURL(new Blob([buffer], { type: 'image/jpg' }));
-          this.handleAddImage(file.name, path);
-        });
-      }
-    });
-  }
-
-  handleFocus = (direction) => () => {
-    const { focus } = this.state;
-    if (focus === 'initial' && direction === 'center') return;
-
-    if (focus === direction) this.setState({ focus: 'center', previousFocus: focus });
-    else this.setState({ focus: direction, previousFocus: focus });
+    packToZip(editor.get('content'), editor.get('meta'), fs);
   }
 
   handleStartNew = () => {
-    this.handleHideModal();
-    this.props.updateState({
-      meta: {},
-      content: '',
-    });
+    const { hideMenu, resetDocument } = this.props;
+    hideMenu();
+    resetDocument();
+  }
+
+  handleLoadZip = (zip) => {
+    const { hideMenu, loadDocumentFromZip } = this.props;
+    hideMenu();
+    loadDocumentFromZip(zip);
   }
 
   render() {
-    const { content, meta, fs } = this.props;
-    const { focus, previousFocus, showMenu } = this.state;
+    const {
+      ui, editor, fs,
+      resetDocument, setContent, setMetaKey, hideMenu, changeFocus,
+      addFile, removeFile, moveFile,
+    } = this.props;
 
-    const contentClass = cx('content', focus, styles[`from${previousFocus}`]);
+    const contentClass = cx('content', ui.get('focus'), styles[`from${ui.get('previousFocus')}`]);
     const components = Typography;
-    const { node, wordCount } = markdownToReactComponent(content, components, fs);
+    const { node, wordCount } = markdownToReactComponent(editor.get('content'), components, fs);
 
     return (
       <div className={styles.wrapper}>
-        {showMenu &&
+        {ui.get('showMenu') &&
           <div className={styles.modal}>
-            <Button onClick={this.handleStartNew}>New Document</Button>
-            <Button onClick={this.handleHideModal}>Continue</Button>
-            <ButtonZip onChange={this.handleUploadZip}>From zip</ButtonZip>
+            <Button onClick={hideMenu}>Continue</Button>
+            <Button onClick={resetDocument}>New Document</Button>
+            <ButtonZip onChange={this.handleLoadZip}>From zip</ButtonZip>
           </div>
         }
 
         <Header
-          focus={focus}
-          handleFocus={this.handleFocus}
+          focus={ui.get('focus')}
+          handleFocus={changeFocus}
         />
 
         <div className={contentClass}>
           <div className={cx('contentElement', 'contentElementLeft')}>
             <div className={styles.contentWrapper}>
               <EditorInput
-                content={content}
-                meta={meta}
-                onChangeContent={this.handleChangeContent}
-                onChangeMeta={this.handleChangeMeta}
-                onChangeImage={this.handleAddImage}
+                content={editor.get('content')}
+                meta={editor.get('meta')}
+                onChangeContent={setContent}
+                onChangeMeta={setMetaKey}
+                onChangeImage={addFile}
                 metaInputs={metaInputs}
               />
             </div>
@@ -204,7 +118,7 @@ class HomePage extends React.Component {
             <div className={styles.contentWrapper}>
               <EditorPreview
                 node={node}
-                meta={meta}
+                meta={editor.get('meta')}
                 fs={fs}
                 wrapper={PostWrapper}
               />
@@ -215,25 +129,19 @@ class HomePage extends React.Component {
         <Footer
           fs={fs}
           wordCount={wordCount}
-          onStartNew={this.handleStartNew}
-          onAddImage={this.handleAddImage}
-          onRemoveImage={this.handleRemoveImage}
-          onEditImage={this.handleEditImage}
+          onStartNew={resetDocument}
+          onAddImage={addFile}
+          onRemoveImage={removeFile}
+          onEditImage={moveFile}
           onDownload={this.handleDownload}
-          onUploadZip={this.handleUploadZip}
+          onUploadZip={this.handleLoadZip}
         />
       </div>
     );
   }
 }
 
-export default ComponentStore(
-  () => ({
-    content: initialContent,
-    meta: {
-      title: 'test',
-    },
-    fs: {
-    },
-  })
+export default connect(
+  (state) => state.get('homePage'),
+  actions,
 )(HomePage);

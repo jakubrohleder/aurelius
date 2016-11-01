@@ -23,11 +23,13 @@ export default function createRoutes(store) {
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('containers/HomePage'),
+          System.import('containers/HomePage/redux/index'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
+        importModules.then(([component, { reducer }]) => {
+          injectReducer('homePage', reducer);
           renderRoute(component);
         });
 

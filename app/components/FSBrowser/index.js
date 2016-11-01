@@ -17,7 +17,7 @@ export default function FSBrowser(props) {
     onEdit(oldName, newName);
   };
 
-  if (Object.values(fs).length === 0) {
+  if (fs.size === 0) {
     return (
       <div className={styles.empty}>
         <img src={empty} role="presentation" />
@@ -27,7 +27,7 @@ export default function FSBrowser(props) {
 
   return (
     <div className={styles.wrapper}>
-      {Object.entries(fs).map(
+      {fs.map(
         ([name, src]) => (
           <ImageWrapper
             key={name}

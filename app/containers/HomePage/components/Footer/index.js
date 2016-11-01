@@ -16,8 +16,8 @@ export default class Footer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextLength = Object.keys(nextProps.fs).length;
-    const length = Object.keys(this.props.fs).length;
+    const nextLength = nextProps.fs.size;
+    const length = this.props.fs.size;
 
     if (nextLength !== length && nextLength === 0) {
       this.setState({
@@ -37,7 +37,7 @@ export default class Footer extends React.Component {
       onAddImage, onDownload, onRemoveImage, onEditImage, onStartNew, onUploadZip,
     } = this.props;
     const { showFs } = this.state;
-    const filesCount = Object.keys(fs).length;
+    const filesCount = fs.size;
     const footerClass = cx('footer', { showFs });
 
     return (
