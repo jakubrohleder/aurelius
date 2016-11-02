@@ -51,6 +51,7 @@ class HomePage extends React.Component {
     setMetaKey: React.PropTypes.func.isRequired,
     hideMenu: React.PropTypes.func.isRequired,
     resetDocument: React.PropTypes.func.isRequired,
+    clearFileSystem: React.PropTypes.func.isRequired,
     changeFocus: React.PropTypes.func.isRequired,
     addFile: React.PropTypes.func.isRequired,
     removeFile: React.PropTypes.func.isRequired,
@@ -64,13 +65,15 @@ class HomePage extends React.Component {
   }
 
   handleStartNew = () => {
-    const { hideMenu, resetDocument } = this.props;
+    const { hideMenu, resetDocument, clearFileSystem } = this.props;
     hideMenu();
     resetDocument();
+    clearFileSystem();
   }
 
   handleLoadZip = (zip) => {
-    const { hideMenu, loadDocumentFromZip } = this.props;
+    const { hideMenu, loadDocumentFromZip, clearFileSystem } = this.props;
+    clearFileSystem();
     hideMenu();
     loadDocumentFromZip(zip);
   }

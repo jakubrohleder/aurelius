@@ -13,7 +13,7 @@ export default function MetaInputText(props) {
         type="text"
         id={id}
         className={styles.input}
-        onChange={(event) => onChange(name, event.target.value)} value={meta[name] || ''}
+        onChange={(event) => onChange(name, event.target.value)} value={meta.get(name, '')}
       />
     </label>
   );

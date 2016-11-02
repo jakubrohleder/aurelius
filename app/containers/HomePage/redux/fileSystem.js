@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 const ADD_FILE = 'fileSystem/ADD_FILE';
 const REMOVE_FILE = 'fileSystem/REMOVE_FILE';
 const MOVE_FILE = 'fileSystem/MOVE_FILE';
+const CLEAR = 'fileSystem/CLEAR';
 
 const initialState = fromJS({});
 
@@ -23,6 +24,10 @@ export default function reducer(state = initialState, action) {
       return state.delete(action.oldName).set(action.newName, file);
     }
 
+    case CLEAR: {
+      return fromJS({});
+    }
+
     default: return state;
   }
 }
@@ -40,6 +45,12 @@ export function removeFile(name) {
   return {
     type: REMOVE_FILE,
     name,
+  };
+}
+
+export function clearFileSystem() {
+  return {
+    type: CLEAR,
   };
 }
 

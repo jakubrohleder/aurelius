@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import frontMatter from 'front-matter';
+import { addFile } from './fileSystem';
 
 const SET_CONTENT = 'editor/SET_CONTENT';
 const SET_META_KEY = 'editor/SET_META_KEY';
@@ -23,7 +24,7 @@ export default function reducer(state = initialState, action) {
       return state.set('content', action.content);
     }
     case SET_META_KEY: {
-      return state.updateIn(['meta', action.key], action.value);
+      return state.setIn(['meta', action.key], action.value);
     }
     case RESET_DOCUMENT: {
       return state.set('content', '').set('meta', fromJS({}));
@@ -76,10 +77,30 @@ export function loadDocumentFromZip(zip) {
         });
       }
 
+      // TODO dry
       if (file.name.endsWith('.jpg')) {
         file.async('uint8array').then((buffer) => {
-          const path = URL.createObjectURL(new Blob([buffer], { type: 'image/jpg' }));
-          this.handleAddImage(file.name, path);
+          const blob = new Blob([buffer], { type: 'image/jpg' });
+
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            dispatch(addFile(file.name, reader.result));
+          };
+
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      if (file.name.endsWith('.png')) {
+        file.async('uint8array').then((buffer) => {
+          const blob = new Blob([buffer], { type: 'image/png' });
+
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            dispatch(addFile(file.name, reader.result));
+          };
+
+          reader.readAsDataURL(blob);
         });
       }
     });

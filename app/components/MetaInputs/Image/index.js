@@ -5,7 +5,7 @@ import styles from './styles.css';
 export default function MetaInputImage(props) {
   const { meta, name, onChange, onChangeImage } = props;
   const id = `${name}-input`;
-  const value = meta[name] || 'Add image';
+  const value = meta.get(name, 'Add image');
 
   function handleChange(event) {
     const files = event.target.files;

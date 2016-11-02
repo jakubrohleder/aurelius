@@ -1,0 +1,14 @@
+// Lists
+:global .markdown {
+  ul,
+  ol {
+    li {
+      margin-bottom: 0;
+    }
+
+  }
+
+  ul {
+    list-style-type: circle;
+  }
+}

@@ -111,7 +111,7 @@ export default function markdownToReactComponent(markdownText, components = {}, 
       }, {}
     );
 
-    const src = fs[node.attribs.src] || node.attribs.src;
+    const src = fs.get(node.attribs.src) || node.attribs.src;
 
     const props = { ...rest, className, style, src, ...createReactProps(node.children) };
 

@@ -27,7 +27,7 @@ export default function FSBrowser(props) {
 
   return (
     <div className={styles.wrapper}>
-      {fs.map(
+      {Object.entries(fs.toJS()).map(
         ([name, src]) => (
           <ImageWrapper
             key={name}

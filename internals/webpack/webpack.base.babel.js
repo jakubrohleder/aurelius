@@ -6,6 +6,8 @@ const path = require('path');
 const webpack = require('webpack');
 
 // PostCSS plugins
+const precss = require('precss');
+const postcssImport = require('postcss-import');
 const cssnext = require('postcss-cssnext');
 const postcssFocus = require('postcss-focus');
 const postcssReporter = require('postcss-reporter');
@@ -25,7 +27,7 @@ module.exports = (options) => ({
       query: options.babelQuery,
     }, {
       // Transform our own .css files with PostCSS and CSS-modules
-      test: /\.css$/,
+      test: /\.s?css$/,
       exclude: /node_modules/,
       loader: options.cssLoaders,
     }, {
@@ -72,7 +74,12 @@ module.exports = (options) => ({
       },
     }),
   ]),
-  postcss: () => [
+  postcss: (wp) => [
+    postcssImport({
+      addDependencyTo: wp,
+      path: 'app',
+    }),
+    precss,
     postcssFocus(), // Add a :focus to every :hover
     cssnext({ // Allow future CSS features to be used, also auto-prefixes the CSS...
       browsers: ['last 2 versions', 'IE > 10'], // ...based on this browser list
@@ -98,4 +105,8 @@ module.exports = (options) => ({
   target: 'web', // Make web variables accessible to webpack, e.g. window
   stats: false, // Don't show stats in the console
   progress: true,
+  node: {
+    fs: 'empty',
+    net: 'empty',
+  },
 });

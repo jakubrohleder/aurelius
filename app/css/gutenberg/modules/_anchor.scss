@@ -1,0 +1,32 @@
+/* Links
+   ========================================================================== */
+
+:global .markdown {
+  a {
+    background: transparent;
+    color: $color-link-normal;
+    transition: all .3s;
+    text-decoration: none;
+
+    &:active,
+    &:hover {
+      outline: 0;
+    }
+
+    &:hover {
+      color: $color-link-hover;
+    }
+
+    &:visited {
+      color: $color-link-visited;
+
+      &:hover {
+        color: $color-link-hover;
+      }
+    }
+
+    &:active {
+      color: $color-link-active;
+    }
+  }
+}

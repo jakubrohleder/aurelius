@@ -1,0 +1,68 @@
+$phone-width: 680px;
+$tablet-width: 1024px;
+$desktop-width: 1280px;
+
+@mixin phone {
+  @media (max-width: #{$phone-width - 1px}) {
+    @content;
+  }
+}
+
+
+@mixin tablet {
+  @media (min-width: #{$phone-width}) and (max-width: #{$tablet-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+.postWrapper {
+  background: white;
+}
+
+.post {
+  padding: 1px 70px 0;
+  margin-top: -100px;
+
+  @include tablet {
+    padding: 0;
+    margin-top: 0;
+  }
+
+  @include phone {
+    padding: 0;
+    margin-top: 0;
+  }
+
+  > div > h1:first-of-type {
+    margin-top: 50px;
+  }
+}
+
+.cover {
+  width: 100%;
+  position: relative;
+  z-index: -1;
+
+  > img {
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+.postTitle {
+  text-align: center;
+}
+
+:global(.container) {
+  max-width: 846px;
+  margin: auto;
+  width: 100%;
+  padding-left: 26px;
+  padding-right: 26px;
+}

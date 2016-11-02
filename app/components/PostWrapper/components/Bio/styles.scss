@@ -1,0 +1,28 @@
+$image-height: 100px;
+
+.wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image{
+  flex: 0 0 $image-height;
+  height: $image-height;
+  width: $image-height;
+  border-radius: $image-height / 2;
+  overflow: hidden;
+  margin-right: 20px;
+
+  > img {
+    object-fit: cover;
+  }
+}
+
+.aboutWrapper{
+
+}
+
+.about{
+
+}

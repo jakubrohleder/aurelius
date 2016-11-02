@@ -12,7 +12,7 @@ export default function MetaInputDateTime(props) {
       <input
         type="datetime-local"
         onChange={(event) => onChange(name, event.target.value)}
-        value={meta[name]}
+        value={meta.get(name)}
       />
     </label>
   );

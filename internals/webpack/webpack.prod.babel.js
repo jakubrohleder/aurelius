@@ -45,7 +45,7 @@ module.exports = require('./webpack.base.babel')({
   // of the CSS being in the JS and injected as a style tag
   cssLoaders: ExtractTextPlugin.extract({
     fallbackLoader: 'style-loader',
-    loader: 'css-loader?modules&-autoprefixer&importLoaders=1!postcss-loader',
+    loader: 'css-loader?modules&-autoprefixer&importLoaders=1!postcss-loader!sass-loader',
   }),
 
   plugins: [
