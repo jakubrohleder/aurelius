@@ -1,0 +1,14 @@
+.wrapper {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 30;
+  list-style: none;
+}
+
+.notification {
+  padding: 1em;
+  margin: 1em;
+  background: white;
+  border: 1px solid black;
+}

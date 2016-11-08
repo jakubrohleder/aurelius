@@ -24,6 +24,7 @@ import MetaInputImage from 'components/MetaInputs/Image';
 import classNames from 'classnames/bind';
 import markdownToReactComponent from 'utils/markdownToReactComponent';
 import { actions } from './redux';
+import { show as showNotificationAction } from 'containers/Notifications/redux';
 
 import styles from './styles.css';
 import Footer from './components/Footer';
@@ -49,6 +50,7 @@ class HomePage extends React.Component {
     loadDocumentFromZip: React.PropTypes.func.isRequired,
     setContent: React.PropTypes.func.isRequired,
     setMetaKey: React.PropTypes.func.isRequired,
+    showNotification: React.PropTypes.func.isRequired,
     hideMenu: React.PropTypes.func.isRequired,
     resetDocument: React.PropTypes.func.isRequired,
     clearFileSystem: React.PropTypes.func.isRequired,
@@ -59,16 +61,21 @@ class HomePage extends React.Component {
   }
 
   handleDownload = () => {
-    const { editor, fs } = this.props;
+    const { editor, fs, showNotification } = this.props;
 
-    packToZip(editor.get('content'), editor.get('meta'), fs);
+    const meta = editor.get('meta');
+    const content = editor.get('content');
+
+    packToZip(content, meta, fs)
+      .catch((error) => showNotification(error, 2000))
+    ;
   }
 
   handleStartNew = () => {
     const { hideMenu, resetDocument, clearFileSystem } = this.props;
+    clearFileSystem();
     hideMenu();
     resetDocument();
-    clearFileSystem();
   }
 
   handleLoadZip = (zip) => {
@@ -94,7 +101,7 @@ class HomePage extends React.Component {
         {ui.get('showMenu') &&
           <div className={styles.modal}>
             <Button onClick={hideMenu}>Continue</Button>
-            <Button onClick={resetDocument}>New Document</Button>
+            <Button onClick={this.handleStartNew}>New Document</Button>
             <ButtonZip onChange={this.handleLoadZip}>From zip</ButtonZip>
           </div>
         }
@@ -150,5 +157,8 @@ export default connect(
     editor: state.getIn(['homePage', 'editor']),
     ui: state.getIn(['homePage', 'ui']),
   }),
-  actions,
+  {
+    ...actions,
+    showNotification: showNotificationAction,
+  },
 )(HomePage);
