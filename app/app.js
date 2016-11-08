@@ -42,7 +42,7 @@ store.subscribe(throttle(() => {
   if (!state.homePage) return;
   saveState({
     homePage: {
-      fs: state.homePage.fs,
+      // fs: state.homePage.fs,
       editor: state.homePage.editor,
     },
   });
