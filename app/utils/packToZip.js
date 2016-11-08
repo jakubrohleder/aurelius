@@ -19,7 +19,7 @@ export default function packToZip(content, meta, fs) {
 
   const date = meta.get('date') || localISOTime;
   const name = `${date.slice(0, 10)}-${kebabCase(title)}`;
-  const text = `---\n${objectToFrontMatter({ ...meta, date })}\n---\n${content}`;
+  const text = `---\n${objectToFrontMatter(meta.set('date', date).toJS())}\n---\n${content}`;
 
   zip.file('index.md', text);
 

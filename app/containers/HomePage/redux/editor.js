@@ -73,7 +73,7 @@ export function loadDocumentFromZip(zip) {
       if (file.name.endsWith('.md')) {
         file.async('string').then((content) => {
           const meta = frontMatter(content);
-          dispatch(loadDocument(meta.body, meta.attributes));
+          dispatch(loadDocument(meta.body, fromJS(meta.attributes)));
         });
       }
 
