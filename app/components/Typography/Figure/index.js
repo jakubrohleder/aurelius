@@ -1,13 +1,16 @@
 import React from 'react';
-import styles from './styles.css';
 
 export default function Figure(props) {
   const { children, src, alt } = props;
 
   return (
-    <figure className={styles.wrapper}>
+    <figure>
       <img src={src} alt={alt} />
-      {children}
+      {children &&
+        <figcaption>
+          {children}
+        </figcaption>
+      }
     </figure>
   );
 }

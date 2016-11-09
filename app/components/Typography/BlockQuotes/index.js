@@ -8,15 +8,14 @@ export default function BlockQuotes(props) {
     <figure className={styles.wrapper}>
       <blockquote cite={cite}>
         {children}
+        {cite &&
+          <footer>
+            <cite>
+              {cite}
+            </cite>
+          </footer>
+        }
       </blockquote>
-
-      {cite &&
-        <figcaption>
-          <cite>
-            {cite}
-          </cite>
-        </figcaption>
-      }
     </figure>
   );
 }

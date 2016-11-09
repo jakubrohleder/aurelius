@@ -7,6 +7,11 @@
   border-radius: 0.1em;
   text-transform: uppercase;
   font-size: 0.8em;
+  cursor: pointer;
+}
+
+.wrapper > * {
+  cursor: pointer;
 }
 
 .wrapper:disabled {

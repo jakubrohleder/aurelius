@@ -21,7 +21,7 @@ export default function PostWrapper(props) {
       <div className={styles.cover}>
         <img src={cover} role="presentation" />
       </div>
-      <div className={classNames('container markdown', styles.postWrapper)}>
+      <div className={classNames('markdown', styles.container, styles.postWrapper)}>
         <div className={styles.post}>
           <div className={styles.postTitle}>
             <h1>{meta.title}</h1>

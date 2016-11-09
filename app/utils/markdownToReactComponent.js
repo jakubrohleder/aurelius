@@ -3,53 +3,52 @@
 import React from 'react';
 // import hljs from 'highlight.js';
 import markdownIt from 'markdown-it';
+import markdownItContainer from 'markdown-it-container';
 import { parseDOM } from 'htmlparser2';
 import camelCase from 'lodash/camelCase';
 
 import countWords from 'utils/countWords';
 
-const md = markdownIt({
-  html: true,
-  linkify: true,
-  typographer: true,
-  // highlight,
-});
+function addComponent(md, name) {
+  console.log(name);
+  const stripNameRegex = new RegExp(`^${name}\\s*(.*)$`);
+  md.use(markdownItContainer, name, {
+    validate: (params) => params.trim().match(stripNameRegex),
+    render: (tokens, idx) => {
+      if (tokens[idx].nesting === 1) {
+        const attrs = tokens[idx].info.trim().match(stripNameRegex);
 
-/**
- * Transforms markdownText and returns React Component
- * @param  {string} markdownText [description]
- * @param  {Object} components   Object containing React Components that will be used to replace divs
- * @param  {Object} fs           Object containing 'file system' tree, that will be used to replace images
- * @return {ReactComponent}
- */
-export default function markdownToReactComponent(markdownText, components = {}, fs = {}) {
-  const html = md.render(markdownText);
+        return `<div react-component-name=${name} ${attrs}>\n`;
+      }
 
-  // return (
-  //   <div dangerouslySetInnerHTML={{ __html: html }} />
-  // );
+      return '</div>\n';
+    },
+  });
+}
 
-  const ast = parseDOM(html);
+export default class MarkdownToReact {
+  constructor(components) {
+    this.components = components;
+    this.md = markdownIt({
+      html: true,
+      linkify: true,
+      typographer: true,
+      // highlight,
+    });
 
-  if (ast == null) {
-    console.warn('Wrong format of ast', ast);
-    return null;
+    Object.keys(components).forEach((name) => addComponent(this.md, name));
   }
 
-  return {
-    node: React.createElement('div', createReactProps(ast)),
-    wordCount: countWords(ast),
-  };
 
-  function createReactProps(nodes) {
+  createReactProps(nodes, fs) {
     if (nodes == null) return [];
     return nodes.reduce(
       (acc, node) => {
-        const data = createReactElementData(node);
+        const data = this.createReactElementData(node, fs);
         if (data == null) return acc;
 
         const { propName } = data;
-        const element = createReactElement(data);
+        const element = this.createReactElement(data);
 
         if (propName == null) {
           return {
@@ -67,7 +66,7 @@ export default function markdownToReactComponent(markdownText, components = {}, 
     );
   }
 
-  function createReactElement(elementData) {
+  createReactElement(elementData) {
     const { type, props: rawProps, data } = elementData;
 
     if (type === 'text') return data;
@@ -78,7 +77,7 @@ export default function markdownToReactComponent(markdownText, components = {}, 
     return React.createElement(type, props, ...children);
   }
 
-  function createReactElementData(node) {
+  createReactElementData(node, fs) {
     if (node.type === 'text') {
       if (node.data.trim().length === 0) return null;
       return node;
@@ -90,7 +89,7 @@ export default function markdownToReactComponent(markdownText, components = {}, 
     if (node.attribs == null) {
       return {
         type: node.name,
-        props: createReactProps(node.children),
+        props: this.createReactProps(node.children, fs),
       };
     }
 
@@ -113,7 +112,7 @@ export default function markdownToReactComponent(markdownText, components = {}, 
 
     const src = fs.get(node.attribs.src) || node.attribs.src;
 
-    const props = { ...rest, className, style, src, ...createReactProps(node.children) };
+    const props = { ...rest, className, style, src, ...this.createReactProps(node.children, fs) };
 
     if (componentName == null) {
       return {
@@ -123,7 +122,7 @@ export default function markdownToReactComponent(markdownText, components = {}, 
       };
     }
 
-    const Component = components[componentName];
+    const Component = this.components[componentName];
 
     if (Component == null) {
       console.warn(`No react element ${componentName}`);
@@ -140,20 +139,19 @@ export default function markdownToReactComponent(markdownText, components = {}, 
       props,
     };
   }
-}
 
-// function highlight(str, lang) {
-//   if ((lang !== null) && hljs.getLanguage(lang)) {
-//     try {
-//       return hljs.highlight(lang, str).value;
-//     } catch (_error) {
-//       console.error(_error);
-//     }
-//   }
-//   try {
-//     return hljs.highlightAuto(str).value;
-//   } catch (_error) {
-//     console.error(_error);
-//   }
-//   return '';
-// }
+  render(markdownText, fs = {}) {
+    const html = this.md.render(markdownText);
+    const ast = parseDOM(html);
+
+    if (ast == null) {
+      console.warn('Wrong format of ast', ast);
+      return null;
+    }
+
+    return {
+      node: React.createElement('div', this.createReactProps(ast, fs)),
+      wordCount: countWords(ast),
+    };
+  }
+}

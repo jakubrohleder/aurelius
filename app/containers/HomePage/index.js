@@ -22,7 +22,7 @@ import MetaInputText from 'components/MetaInputs/Text';
 import MetaInputDateTime from 'components/MetaInputs/DateTime';
 import MetaInputImage from 'components/MetaInputs/Image';
 import classNames from 'classnames/bind';
-import markdownToReactComponent from 'utils/markdownToReactComponent';
+import MarkdownToReact from 'utils/markdownToReactComponent';
 import { actions } from './redux';
 import { show as showNotificationAction } from 'containers/Notifications/redux';
 
@@ -60,6 +60,10 @@ class HomePage extends React.Component {
     moveFile: React.PropTypes.func.isRequired,
   }
 
+  componentWillMount() {
+    this.contentRenderer = new MarkdownToReact(Typography);
+  }
+
   handleDownload = () => {
     const { editor, fs, showNotification } = this.props;
 
@@ -93,8 +97,7 @@ class HomePage extends React.Component {
     } = this.props;
 
     const contentClass = cx('content', ui.get('focus'), styles[`from${ui.get('previousFocus')}`]);
-    const components = Typography;
-    const { node, wordCount } = markdownToReactComponent(editor.get('content'), components, fs);
+    const { node, wordCount } = this.contentRenderer.render(editor.get('content'), fs);
 
     return (
       <div className={styles.wrapper}>

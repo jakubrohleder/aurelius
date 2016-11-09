@@ -1,13 +1,13 @@
 $phone-width: 680px;
 $tablet-width: 1024px;
 $desktop-width: 1280px;
+$post-border-color: #DDD;
 
 @mixin phone {
   @media (max-width: #{$phone-width - 1px}) {
     @content;
   }
 }
-
 
 @mixin tablet {
   @media (min-width: #{$phone-width}) and (max-width: #{$tablet-width - 1px}) {
@@ -21,27 +21,40 @@ $desktop-width: 1280px;
   }
 }
 
-.postWrapper {
-  background: white;
-}
-
 .post {
+  background: white;
   padding: 1px 70px 0;
-  margin-top: -100px;
+  margin-top: -100px !important;
 
   @include tablet {
-    padding: 0;
     margin-top: 0;
+    border: none;
+    border-bottom: 1px solid $post-border-color;
+    padding: 15px;
   }
 
   @include phone {
-    padding: 0;
     margin-top: 0;
+    border: none;
+    border-bottom: 1px solid $post-border-color;
+    padding: 15px;
   }
 
   > div > h1:first-of-type {
     margin-top: 50px;
   }
+
+  h1 {
+    text-align: center;
+    margin-top: 0;
+  }
+
+  padding-bottom: 15px;
+  padding-top: 30px;
+}
+
+.postWrapper {
+  background: white;
 }
 
 .cover {
@@ -59,10 +72,10 @@ $desktop-width: 1280px;
   text-align: center;
 }
 
-:global(.container) {
-  max-width: 846px;
-  margin: auto;
-  width: 100%;
-  padding-left: 26px;
-  padding-right: 26px;
+.container {
+  max-width: 846px !important;
+  margin: auto !important;
+  width: 100% !important;
+  padding-left: 26px !important;
+  padding-right: 26px !important;
 }
