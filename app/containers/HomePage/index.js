@@ -37,7 +37,7 @@ const metaInputs = [
   (props) => <MetaInputText {...props} name="author" />,
   (props) => <MetaInputDateTime {...props} name="date" />,
   (props) => <MetaInputImage {...props} name="cover" />,
-  (props) => <MetaInputImage {...props} name="photo" />,
+  (props) => <MetaInputImage {...props} name="thumb" />,
   (props) => <MetaInputText {...props} name="path" />,
   (props) => <MetaInputText {...props} name="readNext" />,
 ];
