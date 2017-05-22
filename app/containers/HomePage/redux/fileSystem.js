@@ -1,5 +1,7 @@
 import { fromJS } from 'immutable';
 
+import fileSlug from 'utils/fileSlug';
+
 const ADD_FILE = 'fileSystem/ADD_FILE';
 const REMOVE_FILE = 'fileSystem/REMOVE_FILE';
 const MOVE_FILE = 'fileSystem/MOVE_FILE';
@@ -10,7 +12,8 @@ const initialState = fromJS({});
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case ADD_FILE: {
-      const path = action.dir ? `${action.dir}/${action.name}` : action.name;
+      const name = fileSlug(action.name);
+      const path = action.dir ? `${action.dir}/${name}` : name;
       return state.set(path, action.src);
     }
 

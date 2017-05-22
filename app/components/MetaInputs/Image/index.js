@@ -2,6 +2,8 @@ import React from 'react';
 
 import styles from './styles.css';
 
+import fileSlug from 'utils/fileSlug';
+
 export default function MetaInputImage(props) {
   const { meta, name, onChange, onChangeImage } = props;
   const id = `${name}-input`;
@@ -13,8 +15,9 @@ export default function MetaInputImage(props) {
     const file = files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
-      onChange(name, file.name);
-      onChangeImage(file.name, reader.result);
+      const filename = fileSlug(file.name);
+      onChange(name, filename);
+      onChangeImage(filename, reader.result);
     };
 
     reader.readAsDataURL(file);

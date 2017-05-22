@@ -7,10 +7,11 @@ import markdownItContainer from 'markdown-it-container';
 import { parseDOM } from 'htmlparser2';
 import camelCase from 'lodash/camelCase';
 
+
 import countWords from 'utils/countWords';
+import fileSlug from 'utils/fileSlug';
 
 function addComponent(md, name) {
-  console.log(name);
   const stripNameRegex = new RegExp(`^${name}\\s*(.*)$`);
   md.use(markdownItContainer, name, {
     validate: (params) => params.trim().match(stripNameRegex),
@@ -110,7 +111,7 @@ export default class MarkdownToReact {
       }, {}
     );
 
-    const src = fs.get(node.attribs.src) || node.attribs.src;
+    const src = fs.get(fileSlug(node.attribs.src)) || node.attribs.src;
 
     const props = { ...rest, className, style, src, ...this.createReactProps(node.children, fs) };
 

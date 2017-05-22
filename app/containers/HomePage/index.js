@@ -21,6 +21,7 @@ import packToZip from 'utils/packToZip';
 import MetaInputText from 'components/MetaInputs/Text';
 import MetaInputDateTime from 'components/MetaInputs/DateTime';
 import MetaInputImage from 'components/MetaInputs/Image';
+import MetaInputSelect from 'components/MetaInputs/Select';
 import classNames from 'classnames/bind';
 import MarkdownToReact from 'utils/markdownToReactComponent';
 import { actions } from './redux';
@@ -40,6 +41,7 @@ const metaInputs = [
   (props) => <MetaInputImage {...props} name="thumb" />,
   (props) => <MetaInputText {...props} name="path" />,
   (props) => <MetaInputText {...props} name="readNext" />,
+  (props) => <MetaInputSelect {...props} name="lang" keys={['pl', 'id']} />,
 ];
 
 class HomePage extends React.Component {

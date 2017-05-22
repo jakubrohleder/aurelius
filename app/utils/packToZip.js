@@ -5,7 +5,12 @@ import { saveAs } from 'file-saver';
 import kebabCase from 'lodash/kebabCase';
 import objectToFrontMatter from 'utils/objectToFrontMatter';
 
+import fileSlug from 'utils/fileSlug';
+import slugify from 'utils/slugify';
+
 export default function packToZip(content, meta, fs) {
+  const newContent = content.replace(/src="(.*?)"/g, (_, v) => `src="${fileSlug(v)}"`);
+
   const zip = new JSZip();
 
   const title = meta.get('title');
@@ -18,8 +23,17 @@ export default function packToZip(content, meta, fs) {
   const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 19);
 
   const date = meta.get('date') || localISOTime;
-  const name = `${date.slice(0, 10)}-${kebabCase(title)}`;
-  const text = `---\n${objectToFrontMatter(meta.set('date', date).toJS())}\n---\n${content}`;
+  const lang = meta.get('lang');
+  const name = `${lang}-${date.slice(0, 10)}-${kebabCase(title)}`;
+  let path = slugify(meta.get('path'));
+  if (path[0] !== '/') path = `/${path}`;
+  if (path[path.length - 1] !== '/') path = `${path}/`;
+
+  const improvedMeta = meta
+    .set('date', date)
+    .set('path', path)
+  ;
+  const text = `---\n${objectToFrontMatter(improvedMeta.toJS())}\n---\n${newContent}`;
 
   zip.file('index.md', text);
 

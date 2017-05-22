@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 import frontMatter from 'front-matter';
 import { addFile } from './fileSystem';
+import fileSlug from 'utils/fileSlug';
 
 const SET_CONTENT = 'editor/SET_CONTENT';
 const SET_META_KEY = 'editor/SET_META_KEY';
@@ -9,12 +10,15 @@ const LOAD = 'editor/LOAD';
 
 // import initialContent from 'raw!../md/components.md';
 // import initialContent from 'raw!../md/markdown.md';
+//
+const DEFAULT_LANG = 'pl';
 
 const initialState = fromJS({
   content: '',
   meta: {
     title: '',
     date: '',
+    lang: DEFAULT_LANG,
   },
 });
 
@@ -30,7 +34,12 @@ export default function reducer(state = initialState, action) {
       return state.set('content', '').set('meta', fromJS({}));
     }
     case LOAD: {
-      return state.set('content', action.content).set('meta', action.meta);
+      const meta = action.meta
+        .update('cover', (cover) => fileSlug(cover))
+        .update('lang', (lang) => lang || DEFAULT_LANG)
+        .update('thumb', (thumb) => fileSlug(thumb));
+
+      return state.set('content', action.content).set('meta', meta);
     }
     default: return state;
   }
